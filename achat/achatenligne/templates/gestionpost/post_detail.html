@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <h1>{{ post.title }}</h1>
+  <p>{{ post.content }}</p>
+  {% if post.image %}
+    <img src="{{ post.image.url }}" alt="{{ post.title }}">
+  {% endif %}
+  <p>Créé le : {{ post.created_at|date:"F j, Y, g:i a" }}</p>
+
+  <h2>Commentaires</h2>
+  <ul>
+    {% for comment in comments %}
+      <li>
+        <p>{{ comment.content }}</p>
+        <p>Ajouté le : {{ comment.created_at|date:"F j, Y, g:i a" }}</p>
+        <a href="{% url 'edit_comment' comment.id %}">Modifier</a>
+        <a href="{% url 'delete_comment' comment.id %}">Supprimer</a>
+      </li>
+    {% endfor %}
+  </ul>
+
+  <h3>Ajouter un commentaire</h3>
+  <form method="POST">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Ajouter</button>
+  </form>
+  <a href="{% url 'afficher_posts' %}">Retour aux articles</a>
+{% endblock %}

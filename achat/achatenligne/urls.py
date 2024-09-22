@@ -16,5 +16,6 @@ urlpatterns = [
     path('produit/', views.afficher_produit, name='afficher_produit'),
     path('', views.index, name='index'),
     path('categorie/', views.afficher_categorie, name='afficher_categorie'),
+    path('post/', views.afficher_posts, name='afficher_posts')
 ]
  

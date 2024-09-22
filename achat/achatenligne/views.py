@@ -90,82 +90,94 @@ def index(request):
     return render(request, 'index.html')
 #post et comment
 
+# Afficher la liste des articles (Posts)
+def afficher_posts(request):
+    posts = Post.objects.all().order_by('-created_at')  # Trier par date
+    return render(request, 'affiche_posts.html', {'posts': posts})
 
-# 1. Lister les articles (Read - Post)
-def post_list(request):
-    posts = Post.objects.all()
-    return render(request, 'blog/post_list.html', {'posts': posts})
-
-# 2. Afficher les détails d'un article (Read - Post + Comment)
-def post_detail(request, pk):
-    post = get_object_or_404(Post, pk=pk)
+# Afficher les détails d'un article (Post) avec ses commentaires (Comments)
+def post_detail(request, post_id):
+    post = get_object_or_404(Post, id=post_id)
     comments = post.comments.all()
-
+    
     if request.method == 'POST':
-        comment_form = CommentForm(request.POST)
-        if comment_form.is_valid():
-            comment = comment_form.save(commit=False)
+        form = CommentForm(request.POST)
+        if form.is_valid():
+            comment = form.save(commit=False)
             comment.post = post
             comment.save()
-            return redirect('post_detail', pk=post.pk)
+            return redirect('post_detail', post_id=post_id)
     else:
-        comment_form = CommentForm()
+        form = CommentForm()
 
-    return render(request, 'blog/post_detail.html', {
-        'post': post,
-        'comments': comments,
-        'comment_form': comment_form
-    })
+    return render(request, 'post_detail.html', {'post': post, 'comments': comments, 'form': form})
 
-# 3. Créer un nouvel article (Create - Post)
-def post_create(request):
+# Ajouter un nouvel article (Post)
+def ajouter_post(request):
     if request.method == 'POST':
         form = PostForm(request.POST, request.FILES)
         if form.is_valid():
-            post = form.save()
-            return redirect('post_detail', pk=post.pk)
+            form.save()
+            return redirect('afficher_posts')
     else:
         form = PostForm()
 
-    return render(request, 'blog/post_form.html', {'form': form})
+    return render(request, 'ajouter_post.html', {'form': form})
 
-# 4. Mettre à jour un article (Update - Post)
-def post_update(request, pk):
-    post = get_object_or_404(Post, pk=pk)
+# Modifier un article (Post)
+def edit_post(request, post_id):
+    post = get_object_or_404(Post, id=post_id)
     if request.method == 'POST':
         form = PostForm(request.POST, request.FILES, instance=post)
         if form.is_valid():
-            post = form.save()
-            return redirect('post_detail', pk=post.pk)
+            form.save()
+            return redirect('post_detail', post_id=post.id)
     else:
         form = PostForm(instance=post)
 
-    return render(request, 'blog/post_form.html', {'form': form})
+    return render(request, 'modifier_post.html', {'form': form})
 
-# 5. Supprimer un article (Delete - Post)
-def post_delete(request, pk):
-    post = get_object_or_404(Post, pk=pk)
+# Supprimer un article (Post)
+def delete_post(request, post_id):
+    post = get_object_or_404(Post, id=post_id)
     if request.method == 'POST':
         post.delete()
-        return redirect('post_list')
-    return render(request, 'blog/post_confirm_delete.html', {'post': post})
+        return redirect('afficher_posts')
+    return render(request, 'supprimer_post.html', {'post': post})
 
-# 6. Mettre à jour un commentaire (Update - Comment)
-def comment_update(request, pk):
-    comment = get_object_or_404(Comment, pk=pk)
+# Ajouter un commentaire à un article (Post)
+def ajouter_comment(request, post_id):
+    post = get_object_or_404(Post, id=post_id)
+    if request.method == 'POST':
+        form = CommentForm(request.POST)
+        if form.is_valid():
+            comment = form.save(commit=False)
+            comment.post = post
+            comment.save()
+            return redirect('post_detail', post_id=post.id)
+    else:
+        form = CommentForm()
+
+    return render(request, 'ajouter_comment.html', {'form': form, 'post': post})
+
+# Modifier un commentaire
+def edit_comment(request, comment_id):
+    comment = get_object_or_404(Comment, id=comment_id)
     if request.method == 'POST':
         form = CommentForm(request.POST, instance=comment)
         if form.is_valid():
             form.save()
-            return redirect('post_detail', pk=comment.post.pk)
+            return redirect('post_detail', post_id=comment.post.id)
     else:
         form = CommentForm(instance=comment)
-    return render(request, 'blog/comment_form.html', {'form': form})
 
-# 7. Supprimer un commentaire (Delete - Comment)
-def comment_delete(request, pk):
-    comment = get_object_or_404(Comment, pk=pk)
+    return render(request, 'modifier_comment.html', {'form': form, 'comment': comment})
+
+# Supprimer un commentaire
+def delete_comment(request, comment_id):
+    comment = get_object_or_404(Comment, id=comment_id)
+    post_id = comment.post.id
     if request.method == 'POST':
         comment.delete()
-        return redirect('post_detail', pk=comment.post.pk)
-    return render(request, 'blog/comment_confirm_delete.html', {'comment': comment})
+        return redirect('post_detail', post_id=post_id)
+    return render(request, 'supprimer_comment.html', {'comment': comment})
