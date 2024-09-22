@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Liste des catégories</title>
+    <style>
+        /* Styles basiques pour la carte */
+        .card {
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            padding: 16px;
+            margin: 5px; /* Marge entre les cartes */
+            width: 100px; /* Ajustez la largeur ici */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <!-- Inclusion du header -->
+    {% include 'partials/header.html' %}
+
+    <!-- Contenu spécifique à la page catégorie -->
+    <div class="container">
+        <h1>Nos Catégories</h1>
+        <div class="categories" style="display: flex; justify-content: flex-start; flex-wrap: wrap;">
+            {% for categorie in categories %}
+                <div class="card"style="margin: 5px; width: 305px;">
+                    <h2>{{ categorie.name }}</h2>
+                    <p>Description : {{ categorie.description }}</p>
+                    
+                </div>
+            {% empty %}
+                <p>Aucune catégorie disponible pour le moment.</p>
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- Inclusion du footer -->
+    {% include 'partials/footer.html' %}
+</body>
+</html>
