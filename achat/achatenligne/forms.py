@@ -1,7 +1,7 @@
 from django import forms
 from .models import Category
 from .models import Product
-from .models import Comment, Post
+from .models import Post, Comment
 class CategoryForm(forms.ModelForm):
     class Meta:
         model = Category
@@ -24,16 +24,6 @@ class ProductForm(forms.ModelForm):
             'price': forms.TextInput(attrs={'placeholder': 'Prix'}),
             'image': forms.ClearableFileInput(attrs={'class': 'champ-texte'}),
         }
-class CommentForm(forms.ModelForm):
-    class Meta:
-        model = Comment
-        fields = ('content',)
-        
-
-class PostForm(forms.ModelForm):
-    class Meta:
-        model = Post
-        fields = ('title', 'content')
 
     def __init__(self, *args, **kwargs):
         super(ProductForm, self).__init__(*args, **kwargs)
@@ -41,4 +31,20 @@ class PostForm(forms.ModelForm):
         self.fields['price'].widget.attrs.update({'class': 'champ-texte'})
         self.fields['description'].widget.attrs.update({'class': 'champ-texte'})
         self.fields['image'].widget.attrs.update({'class': 'champ-texte'})
-       
+        self.fields['category'] = forms.ModelChoiceField(
+            queryset=Category.objects.all(),
+            widget=forms.Select(attrs={'class': 'champ-texte'}),
+            empty_label="Sélectionnez une catégorie"  # Option par défaut
+        )
+
+
+
+class PostForm(forms.ModelForm):
+    class Meta:
+        model = Post
+        fields = ['title', 'content', 'image']
+
+class CommentForm(forms.ModelForm):
+    class Meta:
+        model = Comment
+        fields = ['content']
