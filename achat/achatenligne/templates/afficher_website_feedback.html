@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+
+{% block title %}Liste des Avis du Site Web{% endblock %}
+
+{% block header %}
+<h1>Liste des Avis du Site Web</h1>
+{% endblock %}
+
+{% block content %}
+<section class="content">
+    {% if feedbacks %}
+    <div class="statistics"
+        style="border: 1px solid #007bff; border-radius: 10px; padding: 20px; margin-bottom: 20px; background-color: #f9f9f9;">
+        <h2 style="color: #007bff;">Statistiques des Avis</h2>
+        <p><strong>Total d'Avis :</strong> <span style="font-size: 1.5em;">{{ total_feedbacks }}</span></p>
+        <p><strong>Note Moyenne :</strong> <span style="font-size: 1.5em; color: #28a745;">{{
+                average_rating|floatformat:1 }}/5</span></p>
+    </div>
+    {% else %}
+    <p>Aucun avis disponible pour le moment.</p>
+    {% endif %}
+
+    <table style="width: 100%; border-collapse: collapse;">
+        <tr>
+            <th style="border: 1px solid #dddddd; padding: 8px;">Commentaire</th>
+            <th style="border: 1px solid #dddddd; padding: 8px;">Note</th>
+            <th style="border: 1px solid #dddddd; padding: 8px;">Date</th>
+            <th style="border: 1px solid #dddddd; padding: 8px;">Image</th> <!-- New column for images -->
+            <th style="border: 1px solid #dddddd; padding: 8px;">Actions</th>
+        </tr>
+        {% for feedback in feedbacks %}
+        <tr>
+            <td style="border: 1px solid #dddddd; padding: 8px;">{{ feedback.comment }}</td>
+            <td style="border: 1px solid #dddddd; padding: 8px;">{{ feedback.rating }}/5</td>
+            <td style="border: 1px solid #dddddd; padding: 8px;">{{ feedback.date_added }}</td>
+            <td style="border: 1px solid #dddddd; padding: 8px;">
+                {% if feedback.image %}
+                <img src="{{ feedback.image.url }}" alt="Image"
+                    style="max-width: 100px; height: auto; border-radius: 5px;">
+                {% else %}
+                Pas d'image
+                {% endif %}
+            </td>
+            <td style="border: 1px solid #dddddd; padding: 8px;">
+                <form action="{% url 'delete_website_feedbacks' feedback.id %}" method="post" style="display:inline;">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-danger btn-sm"
+                        onclick="return confirm('Êtes-vous sûr de vouloir supprimer cet avis ?');">Supprimer</button>
+                </form>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+</section>
+{% endblock %}

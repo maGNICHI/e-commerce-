@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+
+{% block title %}Liste des Produits{% endblock %}
+
+{% block header %}
+    <h1>Liste des Produits</h1>
+{% endblock %}
+
+{% block content %}
+<section class="content">
+    <a href="/dashboard/produits/ajouter/" class="btn btn-primary" style="margin-bottom: 10px;">
+        Ajouter un Produit
+    </a>
+    <table style="width: 100%; border-collapse: collapse;">
+        <tr>
+            <th style="border: 1px solid #dddddd; padding: 8px;">Titre</th>
+            <th style="border: 1px solid #dddddd; padding: 8px;">Prix</th>
+            <th style="border: 1px solid #dddddd; padding: 8px;">Description</th>
+            <th style="border: 1px solid #dddddd; padding: 8px;">Catégorie</th>
+            <th style="border: 1px solid #dddddd; padding: 8px;">Image</th> <!-- Nouvelle colonne pour l'image -->
+            <th style="border: 1px solid #dddddd; padding: 8px;">Actions</th>
+        </tr>
+        {% for produit in produits %}
+        <tr>
+            <td style="border: 1px solid #dddddd; padding: 8px;">{{ produit.title }}</td>
+            <td style="border: 1px solid #dddddd; padding: 8px;">{{ produit.price }} TND</td>
+            <td style="border: 1px solid #dddddd; padding: 8px;">{{ produit.description }}</td>
+            <td style="border: 1px solid #dddddd; padding: 8px;">{{ produit.category.name }}</td>
+            <td style="border: 1px solid #dddddd; padding: 8px;">
+                <img src="{{ produit.image.url }}" alt="Image de {{ produit.title }}" style="max-width: 100px; height: auto;"> <!-- Image du produit -->
+            </td>
+            <td style="border: 1px solid #dddddd; padding: 8px;">
+                <a href="/dashboard/produits/edit/{{ produit.id }}" class="btn btn-warning btn-sm">Modifier</a>
+                <form action="{% url 'delete_product' produit.id %}" method="post" style="display:inline;">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce produit ?');">Supprimer</button>
+                </form>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+</section>
+{% endblock %}

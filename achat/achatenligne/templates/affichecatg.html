@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% block title %}Liste des Catégories{% endblock %}
+
+{% block header %}
+    <h1>Liste des Catégories</h1>
+{% endblock %}
+
+{% block content %}
+<!-- Main content -->
+<section class="content">
+    <!-- Bouton pour ajouter une nouvelle catégorie -->
+    <a href="/dashboard/categories/add/" class="btn btn-primary" style="margin-bottom: 10px;">
+        Ajouter une Catégorie
+    </a>
+
+    <table style="width: 100%; border-collapse: collapse;">
+        <tr>
+            <th style="border: 1px solid #dddddd; padding: 8px;">Nom</th>
+            <th style="border: 1px solid #dddddd; padding: 8px;">Description</th>
+            <th style="border: 1px solid #dddddd; padding: 8px;">Actions</th>
+        </tr>
+        {% for category in categories %}
+        <tr>
+            <td style="border: 1px solid #dddddd; padding: 8px;">{{ category.name }}</td>
+            <td style="border: 1px solid #dddddd; padding: 8px;">{{ category.description }}</td>
+            <td style="border: 1px solid #dddddd; padding: 8px;">
+                <a href="/dashboard/categories/edit/{{ category.id }}" class="btn btn-warning btn-sm">
+                   Modifier
+                </a>
+                <form action="/dashboard/categories/delete/{{ category.id }}/" method="post" style="display:inline;">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette catégorie ?');">
+                        Supprimer
+                    </button>
+                </form>
+                
+                
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+</section>
+{% endblock %}

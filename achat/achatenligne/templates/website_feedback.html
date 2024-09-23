@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Liste des Avis du Site Web</title>
+
+    <style>
+        /* Styles basiques pour les avis */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: auto;
+            padding: 20px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1,
+        h2 {
+            color: #2c3e50;
+        }
+
+        .feedback-list {
+            display: flex;
+            flex-wrap: wrap;
+            /* Allow items to wrap to the next line */
+            gap: 20px;
+            /* Space between cards */
+        }
+
+        .feedback-card {
+            position: relative;
+            /* Allows absolute positioning of child elements */
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            padding: 16px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            text-align: left;
+            flex: 1 1 calc(45% - 20px);
+            /* Two columns */
+            max-width: calc(45% - 20px);
+            /* Ensure no overflow */
+        }
+
+        .feedback-card h3 {
+            font-size: 16px;
+            /* Taille de la police du titre */
+            margin-bottom: 5px;
+        }
+
+        .feedback-card p {
+            color: #777;
+            margin-bottom: 5px;
+        }
+
+        .feedback-card .rating {
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .feedback-form {
+            margin-top: 20px;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            background-color: #f9f9f9;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .feedback-form textarea,
+        .feedback-form input[type="number"] {
+            width: calc(100% - 22px);
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+
+        .feedback-form button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 10px 15px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .feedback-form button:hover {
+            background-color: #2980b9;
+        }
+
+        .add-feedback-button,
+        .back-button {
+            background-color: #28a745;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            text-align: center;
+            display: inline-block;
+            text-decoration: none;
+            margin-bottom: 20px;
+            /* Space below the button */
+        }
+
+        .add-feedback-button:hover,
+        .back-button:hover {
+            background-color: #218838;
+        }
+
+        .delete-button {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: #dc3545;
+            /* Bootstrap danger color */
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 5px 10px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .delete-button:hover {
+            background-color: #c82333;
+            /* Darker red on hover */
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Inclusion du header -->
+    {% include 'partials/header.html' %}
+
+    <!-- Contenu spécifique à la page des avis -->
+    <div class="container">
+        <br>
+        <!-- Button to jump to the feedback form -->
+        <a href="#feedback-form" class="add-feedback-button">Ajouter un Avis</a>
+
+        <!-- Liste des avis -->
+        <h2>Liste des Avis</h2>
+        <div class="feedback-list">
+            {% for feedback in feedbacks %}
+            <div class="feedback-card">
+                <button type="submit" class="delete-button" formaction="{% url 'delete_website_feedback' feedback.id %}"
+                    formmethod="post"
+                    onclick="return confirm('Êtes-vous sûr de vouloir supprimer cet avis ?');">Supprimer</button>
+                <h3>Commentaire :</h3>
+                <p>{{ feedback.comment }}</p>
+                <p class="rating">Note : {{ feedback.rating }}/5</p>
+                <p>Date : {{ feedback.date_added }}</p>
+                {% if feedback.image %}
+                <img src="{{ feedback.image.url }}" alt="Image" style="max-width: 40%; margin-top: 10px;">
+                {% endif %}
+            </div>
+            {% empty %}
+            <p>Aucun avis disponible pour le moment.</p>
+            {% endfor %}
+        </div>
+
+        <!-- Formulaire pour ajouter un nouvel avis -->
+        <div class="feedback-form" id="feedback-form">
+            <h2>Ajouter un Avis</h2>
+            <form action="{% url 'ajouter_website_feedback' %}" method="post" enctype="multipart/form-data">
+                <!-- Add enctype -->
+                {% csrf_token %}
+                <div>
+                    <textarea name="comment" placeholder="Entrez votre commentaire ici" rows="4" required></textarea>
+                </div>
+                <div>
+                    <input type="number" name="rating" min="1" max="5" placeholder="Note (1-5)" required>
+                </div>
+                <div>
+                    <input type="file" name="image" accept="image/*"> <!-- Optional image input -->
+                </div>
+                <br>
+                <button type="submit">Soumettre</button>
+            </form>
+            <br>
+            <a href="#" class="back-button" onclick="window.scrollTo(0, 0);">Retour</a> <!-- Return button -->
+        </div>
+    </div>
+
+    <!-- Inclusion du footer -->
+    {% include 'partials/footer.html' %}
+</body>
+
+</html>

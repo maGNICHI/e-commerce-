@@ -1,0 +1,63 @@
+<!-- produit.html -->
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Liste des produits</title>
+    <style>
+        /* Styles basiques pour la carte */
+        .card {
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            padding: 16px;
+            margin: 5px; /* Marge entre les cartes */
+            width: 100px; /* Ajustez la largeur ici */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+        .card img {
+            max-width: 100%;
+            border-radius: 10px;
+        }
+        .card h2 {
+            font-size: 16px; /* Taille de la police du titre */
+            margin-bottom: 5px; 
+        }
+        .card p {
+            color: #777;
+            margin-bottom: 5px; 
+        }
+        .card .price {
+            font-size: 14px; /* Taille de la police du prix */
+            font-weight: bold;
+            margin-bottom: 10px; 
+        }
+    </style>
+</head>
+<body>
+    <!-- Inclusion du header -->
+    {% include 'partials/header.html' %}
+
+    <!-- Contenu spécifique à la page produit -->
+    <div class="container">
+        <h1>Nos Produits</h1>
+        <div class="products" style="display: flex; justify-content: flex-start; flex-wrap: wrap;">
+            {% for produit in produits %}
+                <div class="card" style="margin: 5px; width: 305px;"> <!-- Ajustez la largeur ici -->
+                    <img src="{{ produit.image.url }}" alt="{{ produit.title }}">
+                    <h2>{{ produit.title }}</h2>
+                    <p>Description : {{ produit.description }}</p>
+                    <p class="price">{{ produit.price }} €</p>
+                    <p>Catégorie : {{ produit.category.name }}</p>
+                </div>
+            {% empty %}
+                <p>Aucun produit disponible pour le moment.</p>
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- Inclusion du footer -->
+    {% include 'partials/footer.html' %}
+</body>
+</html>
