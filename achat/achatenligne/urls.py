@@ -16,6 +16,11 @@ urlpatterns = [
     path('produit/', views.afficher_produit, name='afficher_produit'),
     path('', views.index, name='index'),
     path('categorie/', views.afficher_categorie, name='afficher_categorie'),
-    path('post/', views.afficher_posts, name='afficher_posts')
+   
+     path('post/', views.affiche_posts, name='affiche_posts'),
+    path('post/<int:post_id>/', views.post_detail, name='post_detail'),
+    path('post/ajouter/', views.ajouter_post, name='ajouter_post'),
+    path('post/<int:post_id>/modifier/', views.edit_post, name='edit_post'),
+    path('post/<int:post_id>/supprimer/', views.delete_post, name='delete_post')
 ]
  

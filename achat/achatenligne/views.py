@@ -88,12 +88,14 @@ def afficher_categorie(request):
     return render(request, 'categories.html', {'categories': categories})
 def index(request):
     return render(request, 'index.html')
+#################################################################################################################
 #post et comment
 
 # Afficher la liste des articles (Posts)
-def afficher_posts(request):
+def affiche_posts(request):
     posts = Post.objects.all().order_by('-created_at')  # Trier par date
-    return render(request, 'affiche_posts.html', {'posts': posts})
+    return render(request, 'gestionpost/affiche_posts.html', {'posts': posts})
+
 
 # Afficher les détails d'un article (Post) avec ses commentaires (Comments)
 def post_detail(request, post_id):
@@ -110,7 +112,9 @@ def post_detail(request, post_id):
     else:
         form = CommentForm()
 
-    return render(request, 'post_detail.html', {'post': post, 'comments': comments, 'form': form})
+    return render(request, 'gestionpost/post_detail.html', {'post': post, 'comments': comments, 'form': form})
+
+
 
 # Ajouter un nouvel article (Post)
 def ajouter_post(request):
@@ -122,7 +126,7 @@ def ajouter_post(request):
     else:
         form = PostForm()
 
-    return render(request, 'ajouter_post.html', {'form': form})
+    return render(request, 'gestionpost/ajouter_post.html', {'form': form})
 
 # Modifier un article (Post)
 def edit_post(request, post_id):
@@ -135,7 +139,7 @@ def edit_post(request, post_id):
     else:
         form = PostForm(instance=post)
 
-    return render(request, 'modifier_post.html', {'form': form})
+    return render(request, 'gestionpost/modifier_post.html', {'form': form})
 
 # Supprimer un article (Post)
 def delete_post(request, post_id):
@@ -143,7 +147,7 @@ def delete_post(request, post_id):
     if request.method == 'POST':
         post.delete()
         return redirect('afficher_posts')
-    return render(request, 'supprimer_post.html', {'post': post})
+    return render(request, 'gestionpost/supprimer_post.html', {'post': post})
 
 # Ajouter un commentaire à un article (Post)
 def ajouter_comment(request, post_id):
@@ -158,7 +162,7 @@ def ajouter_comment(request, post_id):
     else:
         form = CommentForm()
 
-    return render(request, 'ajouter_comment.html', {'form': form, 'post': post})
+    return render(request, 'gestionpost/ajouter_comment.html', {'form': form, 'post': post})
 
 # Modifier un commentaire
 def edit_comment(request, comment_id):
@@ -171,7 +175,7 @@ def edit_comment(request, comment_id):
     else:
         form = CommentForm(instance=comment)
 
-    return render(request, 'modifier_comment.html', {'form': form, 'comment': comment})
+    return render(request, 'gestionpost/modifier_comment.html', {'form': form, 'comment': comment})
 
 # Supprimer un commentaire
 def delete_comment(request, comment_id):
@@ -180,4 +184,4 @@ def delete_comment(request, comment_id):
     if request.method == 'POST':
         comment.delete()
         return redirect('post_detail', post_id=post_id)
-    return render(request, 'supprimer_comment.html', {'comment': comment})
+    return render(request, 'gestionpost/supprimer_comment.html', {'comment': comment})
