@@ -12,6 +12,8 @@ urlpatterns = [
     path('dashboard/produits/ajouter/', views.ajouter_produit, name='ajouter_produit'),
     path('dashboard/produits/edit/<int:product_id>/', views.edit_product, name='edit_product'),
     path('dashboard/produits/delete/<int:product_id>/', views.delete_product, name='delete_product'),
+    path('dashboard/post/<int:post_id>/', views.post_detail, name='post_detail'),
+    path('dashboard/post/ajouter/', views.ajouter_post, name='ajouter_post'),
     #template
     path('produit/', views.afficher_produit, name='afficher_produit'),
     path('', views.index, name='index'),
