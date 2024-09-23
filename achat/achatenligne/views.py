@@ -147,7 +147,7 @@ def delete_post(request, post_id):
     if request.method == 'POST':
         post.delete()
         return redirect('affiche_posts')
-    return render(request, 'gestionpost/supprimer_post.html', {'post': post})
+    return render(request, 'gestionpost/affiche_posts.html', {'post': post})
 
 # Ajouter un commentaire à un article (Post)
 def ajouter_comment(request, post_id):
@@ -164,18 +164,6 @@ def ajouter_comment(request, post_id):
 
     return render(request, 'gestionpost/ajouter_comment.html', {'form': form, 'post': post})
 
-# Modifier un commentaire
-def edit_comment(request, comment_id):
-    comment = get_object_or_404(Comment, id=comment_id)
-    if request.method == 'POST':
-        form = CommentForm(request.POST, instance=comment)
-        if form.is_valid():
-            form.save()
-            return redirect('post_detail', post_id=comment.post.id)
-    else:
-        form = CommentForm(instance=comment)
-
-    return render(request, 'gestionpost/modifier_comment.html', {'form': form, 'comment': comment})
 
 # Supprimer un commentaire
 def delete_comment(request, comment_id):

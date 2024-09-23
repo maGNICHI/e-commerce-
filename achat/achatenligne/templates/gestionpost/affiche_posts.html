@@ -1,58 +1,87 @@
-<!-- posts.html -->
 <!DOCTYPE html>
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Liste des articles</title>
-    
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
     <style>
-        /* Styles basiques pour la carte */
-        .card {
+        /* Réduire la largeur du conteneur */
+        .timeline-body {
             border: 1px solid #ccc;
             border-radius: 10px;
-            padding: 16px;
-            margin: 5px; /* Marge entre les cartes */
-            width: 100%; /* Largeur de la carte ajustée pour les articles */
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            text-align: left;
+            padding: 10px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            max-width: 600px;
+            margin: 20px auto; /* Centrer le conteneur */
         }
-        .card h2 {
-            font-size: 18px; /* Taille de la police du titre */
-            margin-bottom: 10px;
+
+        /* Réduire les dimensions de l'image de profil */
+        .timeline-header .userimage img {
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            margin-right: 5px;
         }
-        .card p {
-            color: #777;
-            margin-bottom: 10px;
+
+        .timeline-header .username {
+            font-weight: bold;
+            font-size: 14px;
         }
-        .card .created-at {
+
+        .timeline-header .text-muted {
             font-size: 12px;
-            color: #555;
+            color: #999;
+            margin-left: auto; /* Déplacer à droite */
         }
-        .card .actions {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+
+        .timeline-content {
             margin-top: 10px;
         }
-        .card img {
-            width: 20px;
-            height: 20px;
+
+        .timeline-content h4 {
+            font-size: 16px;
+            margin-bottom: 8px;
         }
+
+        .timeline-content p {
+            color: #555;
+            margin-bottom: 10px;
+        }
+
+        .timeline-footer {
+            display: flex;
+            justify-content: flex-end; /* Aligner à droite */
+            margin-top: 10px;
+        }
+
+        .timeline-footer a {
+            margin-left: 10px; /* Espacement à gauche */
+            color: #777;
+            text-decoration: none;
+        }
+
+        .timeline-footer a:hover {
+            text-decoration: underline;
+        }
+
         .add-post-btn {
-          background-color: #28a745;
-          color: white;
-          padding: 10px 20px;
-          border: none;
-          border-radius: 5px;
-          text-decoration: none;
-          font-size: 16px;
-          display: inline-block;
-          margin-bottom: 20px;
-      }
-      .add-post-btn:hover {
-          background-color: #218838;
-      }
+            background-color: #28a745;
+            color: white;
+            padding: 8px 16px;
+            border: none;
+            border-radius: 5px;
+            text-decoration: none;
+            font-size: 14px;
+            display: inline-block;
+            margin-bottom: 10px;
+        }
+
+        .add-post-btn:hover {
+            background-color: #218838;
+        }
     </style>
 </head>
 <body>
@@ -60,34 +89,55 @@
     {% include 'partials/header.html' %}
 
     <!-- Contenu spécifique à la page articles -->
-    <div class="container">
-        <h1>Nos Articles</h1>
-        <a href="{% url 'ajouter_post' %}" class="add-post-btn">Ajouter un article</a>
-        <div class="posts" style="display: flex; justify-content: flex-start; flex-wrap: wrap;">
-            {% for post in posts %}
-                <div class="card">
-                  <img src="{{ post.image.url }}" alt="{{ post.title }}">
-                    <h2><a href="{% url 'post_detail' post.id %}" class="btn btn-primary"
-                      >{{ post.title }}</a></h2>
-                   
-                    <p>{{ post.content|truncatewords:20 }}</p>
-                   
-                    <p class="created-at">Créé le : {{ post.created_at|date:"F j, Y, g:i a" }}</p>
-                    
-                    <div class="actions">
-                        <!-- Icône de modification -->
-                        
-                        <a href="{% url 'edit_post' post.id %}" class="btn btn-warning"
-                             >update</a
-      >
-                        <!-- Icône de suppression avec confirmation -->
-                        
-                        <a href="{% url 'delete_post' post.id %}" class="btn btn-danger">delete</a>
-                    </div>
-                </div>
-            {% empty %}
-                <p>Aucun article disponible pour le moment.</p>
-            {% endfor %}
+    <div class="row">
+        <div class="col-md-12">
+            <div class="tab-content p-5">
+                <h1>Nos Articles</h1>
+                <a href="{% url 'ajouter_post' %}" class="add-post-btn">Ajouter un article</a>
+                
+                <ul class="timeline">
+                    {% for post in posts %}
+                    <li>
+                        <div class="timeline-body">
+                            <div class="timeline-header">
+                                <span class="userimage">
+                                    <img src="https://bootdey.com/img/Content/avatar/avatar3.png" alt="Avatar">
+                                </span>
+                                <span class="username">Manar</span>
+                                <span class="text-muted">Créé le : {{ post.created_at|date:"F j, Y, g:i a" }}</span>
+                            </div>
+
+                            <div class="timeline-content">
+                                <h4>{{ post.title }}</h4>
+                                <p>{{ post.content|truncatewords:20 }}</p>
+                                {% if post.image %}
+                                <p>
+                                    <img src="{{ post.image.url }}" alt="{{ post.title }}">
+                                </p>
+                                {% endif %}
+                            </div>
+
+                            <div class="timeline-footer">
+                                <a href="{% url 'edit_post' post.id %}" title="Modifier">
+                                    <i class="fas fa-pencil-alt fa-fw"></i>
+                                </a>
+                                <a href="{% url 'delete_post' post.id %}" title="Supprimer" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cet article ?');">
+                                    <i class="fas fa-trash-alt fa-fw"></i>
+                                </a>
+                                <a href="{% url 'post_detail' post.id %}" title="Commenter">
+                                    <i class="fas fa-comments fa-fw"></i>
+                                </a>
+                                <a href="javascript:;" title="Partager">
+                                    <i class="fas fa-share-alt fa-fw"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </li>
+                    {% empty %}
+                        <p>Aucun article disponible pour le moment.</p>
+                    {% endfor %}
+                </ul>
+            </div>
         </div>
     </div>
 
