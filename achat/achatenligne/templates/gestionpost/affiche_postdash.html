@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% block title %}Liste des Posts{% endblock %}
+
+{% block header %}
+    <h1>Liste des Posts</h1>
+{% endblock %}
+
+{% block content %}
+<section class="content">
+
+    <a href="/dashboard/posts/ajouter/" class="btn btn-primary" style="margin-bottom: 10px;">
+        Ajouter un Post
+    </a>
+    <table style="width: 100%; border-collapse: collapse;">
+        <tr>
+            <th style="border: 1px solid #dddddd; padding: 8px;">ID</th>
+            <th style="border: 1px solid #dddddd; padding: 8px;">Titre</th>
+            <th style="border: 1px solid #dddddd; padding: 8px;">Image</th>
+            <th style="border: 1px solid #dddddd; padding: 8px;">Nombre de Commentaires</th>
+            <th style="border: 1px solid #dddddd; padding: 8px;">Actions</th>
+        </tr>
+        {% for post in posts %}
+        <tr>
+            <td style="border: 1px solid #dddddd; padding: 8px;">{{ post.id }}</td>
+            <td style="border: 1px solid #dddddd; padding: 8px;">{{ post.title }}</td>
+            <td style="border: 1px solid #dddddd; padding: 8px;">
+                <img src="{{ post.image.url }}" alt="Image de {{ post.title }}" style="max-width: 100px; height: auto;"> <!-- Image du post -->
+            </td>
+            <td style="border: 1px solid #dddddd; padding: 8px;">{{ post.comments.count }}</td> <!-- Compte des commentaires -->
+            <td style="border: 1px solid #dddddd; padding: 8px;">
+                <a href="/dashboard/posts/edit/{{ post.id }}" class="btn btn-warning btn-sm">Modifier</a>
+                <form action="{% url 'delete_post' post.id %}" method="post" style="display:inline;">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce post ?');">Supprimer</button>
+                </form>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+</section>
+{% endblock %}
