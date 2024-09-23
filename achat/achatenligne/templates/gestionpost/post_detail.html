@@ -150,54 +150,32 @@
                 
                 <span class="stats-text">{{ post.comments.count }} Comments</span>
             </div>
-            <div class="stats">
-                <span class="fa-stack fa-fw stats-icon">
-                    <i class="fa fa-circle fa-stack-2x text-danger"></i>
-                    <i class="fa fa-heart fa-stack-1x fa-inverse"></i>
-                </span>
-                <span class="fa-stack fa-fw stats-icon">
-                    <i class="fa fa-circle fa-stack-2x text-primary"></i>
-                    <i class="fa fa-thumbs-up fa-stack-1x fa-inverse"></i>
-                </span>
-                <span class="stats-total">4.3k</span>
-            </div>
+            
         </div>
 
         <div class="timeline-footer">
+          
             <a href="javascript:;" class="text-inverse-lighter"><i class="fa fa-thumbs-up fa-fw fa-lg m-r-3"></i> Like</a>
             <a href="javascript:;" class="text-inverse-lighter"><i class="fa fa-comments fa-fw fa-lg m-r-3"></i> Comment</a>
-            <a href="javascript:;" class="text-inverse-lighter"><i class="fa fa-share fa-fw fa-lg m-r-3"></i> Share</a>
+  
         </div>
 
         <!-- Commentaires -->
         <div class="comment-section">
-            <h3>Commentaires</h3>
+           
 
             {% for comment in comments %}
             <div class="timeline-body">
                 <div class="timeline-header">
                     <span class="userimage"><img src="https://bootdey.com/img/Content/avatar/avatar3.png" alt=""></span>
-                    <span class="username">{{ comment.author }}</span>
+                    <span class="username">Manar</span>
                     <span class="text-muted">{{ comment.created_at|date:"F j, Y, g:i a" }}</span>
                 </div>
                 <div class="timeline-content">
                     <p>{{ comment.content }}</p>
                 </div>
-                <div class="timeline-likes">
-                    <div class="stats-right">
-                        <span class="stats-text">10 Likes</span>
-                    </div>
-                    <div class="stats">
-                        <span class="fa-stack fa-fw stats-icon">
-                            <i class="fa fa-circle fa-stack-2x text-danger"></i>
-                            <i class="fa fa-heart fa-stack-1x fa-inverse"></i>
-                        </span>
-                    </div>
-                </div>
-                <div class="timeline-footer">
-                    <a href="javascript:;" class="text-inverse-lighter"><i class="fa fa-thumbs-up fa-fw fa-lg m-r-3"></i> Like</a>
-                    <a href="javascript:;" class="text-inverse-lighter"><i class="fa fa-share fa-fw fa-lg m-r-3"></i> Share</a>
-                </div>
+                
+                
             </div>
             {% empty %}
             <p>Aucun commentaire pour cet article.</p>
@@ -207,6 +185,7 @@
         <!-- Formulaire d'ajout de commentaire -->
         <div class="timeline-comment-box">
             <div class="user"><img src="https://bootdey.com/img/Content/avatar/avatar3.png" alt="User"></div>
+            
             <div class="input">
                 <form method="post">
                     {% csrf_token %}
