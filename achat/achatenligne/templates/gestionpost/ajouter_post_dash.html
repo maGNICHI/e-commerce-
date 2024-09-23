@@ -1,0 +1,101 @@
+{% extends "base.html" %}
+
+{% block title %}Ajouter un Article{% endblock %}
+
+{% block header %}
+    <h1>Ajouter un Article</h1>
+{% endblock %}
+
+{% block content %}
+<!-- Styles intégrés -->
+<style>
+    .form-container {
+        border: 1px solid #ccc; /* Bordure gris clair */
+        border-radius: 8px;     /* Coins arrondis */
+        padding: 20px;          /* Espacement intérieur */
+        background-color: #f9f9f9; /* Couleur de fond légère */
+        width: 85%;             /* Largeur du formulaire */
+        margin: 20px auto;      /* Centrer le formulaire */
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Légère ombre pour le relief */
+    }
+
+    .form-group {
+        margin-bottom: 15px; /* Espacement entre les groupes de champs */
+    }
+
+    .form-group label {
+        display: block;       /* Afficher l'étiquette comme un bloc */
+        margin-bottom: 5px;   /* Espacement en dessous de l'étiquette */
+        font-weight: bold;    /* Mettre l'étiquette en gras */
+        color: #333;          /* Couleur du texte de l'étiquette */
+    }
+
+    .form-group input[type="text"],
+    .form-group textarea {
+        border: 1px solid #ccc; /* Bordure gris clair */
+        border-radius: 4px;     /* Coins arrondis */
+        padding: 5px;           /* Espacement intérieur */
+        width: 100%;            /* Largeur pleine */
+        box-sizing: border-box;  /* Inclure la bordure et le padding dans la largeur totale */
+        font-size: 16px;         /* Taille de la police */
+    }
+
+    .form-group input[type="text"]:focus,
+    .form-group textarea:focus {
+        border-color: #66afe9;   /* Couleur de bordure lors du focus */
+        outline: none;           /* Retirer le contour par défaut */
+        box-shadow: 0 0 5px rgba(102, 175, 233, 0.5); /* Ombre lors du focus */
+    }
+
+    button[type="submit"] {
+        background-color: #28a745; /* Couleur de fond pour le bouton */
+        color: white;               /* Couleur du texte */
+        padding: 10px 20px;         /* Espacement intérieur */
+        border: none;               /* Pas de bordure */
+        border-radius: 5px;         /* Coins arrondis */
+        font-size: 16px;            /* Taille de la police */
+        cursor: pointer;            /* Curseur pointeur */
+    }
+
+    button[type="submit"]:hover {
+        background-color: #218838;  /* Changement de couleur au survol */
+    }
+
+    .btn-secondary {
+        background-color: #6c757d; /* Couleur de fond pour le bouton secondaire */
+        color: white;               /* Couleur du texte */
+        padding: 10px 20px;         /* Espacement intérieur */
+        border: none;               /* Pas de bordure */
+        border-radius: 5px;         /* Coins arrondis */
+        font-size: 16px;            /* Taille de la police */
+        margin-top: 10px;           /* Espacement en haut */
+        text-decoration: none;      /* Retirer la décoration des liens */
+        display: inline-block;      /* Afficher en tant que bloc inline */
+    }
+
+    .btn-secondary:hover {
+        background-color: #5a6268;  /* Changement de couleur au survol */
+    }
+</style>
+
+<section class="content">
+    <div class="form-container">
+        <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="{{ form.title.id_for_label }}">Titre :</label>
+                {{ form.title }}  <!-- Champ de texte pour le titre -->
+            </div>
+
+            <div class="form-group">
+                <label for="{{ form.content.id_for_label }}">Contenu :</label>
+                {{ form.content }}  <!-- Champ de texte pour le contenu -->
+            </div>
+
+            <button type="submit" class="btn btn-primary">Ajouter</button>
+        </form>
+
+        <a href="{% url 'affiche_posts' %}" class="btn btn-secondary">Retour aux articles</a>
+    </div>
+</section>
+{% endblock %}
