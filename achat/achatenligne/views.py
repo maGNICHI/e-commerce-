@@ -56,7 +56,7 @@ def ajouter_produit(request):
     else:
         form = ProductForm() 
 
-    return render(request, 'ajouter_produit.html', {'form': form})  # Render le template
+    return render(request, 'ajouter_produit.html', {'form': form})  
 def edit_product(request, product_id):
     product = get_object_or_404(Product, id=product_id)
     if request.method == 'POST':
