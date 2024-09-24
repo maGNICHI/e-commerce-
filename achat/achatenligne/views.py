@@ -44,7 +44,7 @@ def edit_category(request, category_id):
     return render(request, 'modifiercategorie.html', {'form': form})
 #produit
 def afficher_produits(request):
-    print("Affichage des produits")  # Ajoute cette ligne pour le débogage
+    print("Affichage des produits")  
     produits = Product.objects.all()  # Récupère tous les produits
     return render(request, 'afficheprod.html', {'produits': produits})
 def ajouter_produit(request):
