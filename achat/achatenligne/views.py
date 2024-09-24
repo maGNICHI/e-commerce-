@@ -38,7 +38,7 @@ def edit_category(request, category_id):
             form.save()
             return redirect('afficher_categories') 
     else:
-        form = CategoryForm(instance=category)  # Pré-remplir le formulaire avec les données de la catégorie
+        form = CategoryForm(instance=category) 
     
     return render(request, 'modifiercategorie.html', {'form': form})
 #produit
