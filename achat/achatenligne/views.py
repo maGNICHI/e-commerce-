@@ -54,7 +54,7 @@ def ajouter_produit(request):
             form.save() 
             return redirect('afficher_produits')  
     else:
-        form = ProductForm()  # Formulaire vide pour l'ajout d'un nouveau produit
+        form = ProductForm() 
 
     return render(request, 'ajouter_produit.html', {'form': form})  # Render le template
 def edit_product(request, product_id):
