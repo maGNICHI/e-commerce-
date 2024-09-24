@@ -160,15 +160,16 @@ def ajouter_post_dash(request):
 
 # Modifier un article (Post)
 
+
 def edit_post(request, post_id):
     post = get_object_or_404(Post, id=post_id)
     if request.method == 'POST':
         form = PostForm(request.POST, request.FILES, instance=post)
         if form.is_valid():
             form.save()
-            return redirect('affiche_posts', post_id=post.id)
+            return redirect('affiche_posts')  # Redirige vers la liste des produits
     else:
-        form = PostForm(instance=post)
+        form = PostForm(instance=post)  # Pré-remplir le formulaire avec les données du produit
 
     return render(request, 'gestionpost/modifier_post.html', {'form': form})
 
