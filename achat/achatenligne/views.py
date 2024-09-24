@@ -29,14 +29,14 @@ def ajouter_categorie(request):
 def delete_category(request, category_id):
     category = get_object_or_404(Category, id=category_id)
     category.delete()
-    return redirect('afficher_categories')  # Remplace par le nom de ta vue pour la liste des catégories
+    return redirect('afficher_categories')  
 def edit_category(request, category_id):
     category = get_object_or_404(Category, id=category_id)
     if request.method == 'POST':
         form = CategoryForm(request.POST, instance=category)
         if form.is_valid():
             form.save()
-            return redirect('afficher_categories')  # Redirige vers la liste des catégories
+            return redirect('afficher_categories') 
     else:
         form = CategoryForm(instance=category)  # Pré-remplir le formulaire avec les données de la catégorie
     
