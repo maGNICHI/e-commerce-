@@ -26,11 +26,12 @@ def ajouter_categorie(request):
         form = CategoryForm()  
     
     return render(request, 'ajouter_categorie.html', {'form': form})
+     #delete  
 def delete_category(request, category_id):
     category = get_object_or_404(Category, id=category_id)
     category.delete()
     return redirect('afficher_categories')  
- #modification   
+ 
 def edit_category(request, category_id):
     category = get_object_or_404(Category, id=category_id)
     if request.method == 'POST':
