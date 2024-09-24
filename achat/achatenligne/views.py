@@ -15,7 +15,6 @@ def afficher_categories(request):
     print("Affichage des catégories")  # Ajoute cette ligne
     categories = Category.objects.all()
     return render(request, 'affichecatg.html', {'categories': categories})
-
 def ajouter_categorie(request):
     if request.method == 'POST':
         form = CategoryForm(request.POST)
@@ -26,7 +25,7 @@ def ajouter_categorie(request):
         form = CategoryForm()  
     
     return render(request, 'ajouter_categorie.html', {'form': form})
-     #delete  
+ 
 def delete_category(request, category_id):
     category = get_object_or_404(Category, id=category_id)
     category.delete()
