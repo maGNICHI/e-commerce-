@@ -1,11 +1,112 @@
-{% extends 'base.html' %}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ajouter un article</title>
 
-{% block content %}
-  <h1>Modifier l'article</h1>
-  <form method="POST" enctype="multipart/form-data">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Mettre à jour</button>
-  </form>
-  <a href="{% url 'post_detail' post.id %}">Retour aux détails de l'article</a>
-{% endblock %}
+    <style>
+        /* Styles basiques pour la carte */
+        .card {
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 12px;
+            margin: 10px auto; /* Centrer et ajouter de l'espace */
+            width: 50%; /* Largeur de la carte ajustée */
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            background-color: #f9f9f9;
+        }
+
+        .card h1 {
+            font-size: 20px; /* Taille de police du titre réduite */
+            margin-bottom: 10px;
+        }
+
+        .card label {
+            font-weight: bold;
+            display: block;
+            margin-top: 8px;
+        }
+
+        .card input[type="text"], 
+        .card textarea, 
+        .card input[type="file"] {
+            width: 100%;
+            padding: 8px;
+            border-radius: 3px;
+            border: 1px solid #ccc;
+            margin-top: 3px;
+        }
+
+        .card textarea {
+            height: 80px; /* Hauteur réduite du champ de texte */
+        }
+
+        .btn-submit {
+            background-color: #28a745;
+            color: white;
+            padding: 8px 12px; /* Dimensions réduites */
+            border: none;
+            border-radius: 3px;
+            text-decoration: none;
+            font-size: 14px;
+            margin-top: 15px;
+        }
+
+        .btn-submit:hover {
+            background-color: #218838;
+        }
+
+        .back-btn {
+            background-color: #6c757d;
+            color: white;
+            padding: 8px 12px; /* Dimensions réduites */
+            border: none;
+            border-radius: 3px;
+            text-decoration: none;
+            font-size: 14px;
+            margin-left: 8px;
+        }
+
+        .back-btn:hover {
+            background-color: #5a6268;
+        }
+
+        /* Ajouter un style pour centrer le formulaire et limiter la largeur sur les petits écrans */
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+    </style>
+</head>
+<body>
+    <!-- Inclusion du header -->
+    {% include 'partials/header.html' %}
+
+    <div class="container">
+        <div class="card">
+            <h1>Ajouter un nouvel article</h1>
+
+            <!-- Formulaire d'ajout d'article -->
+            <form method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                <label for="{{ form.title.id_for_label }}">Titre :</label>
+                {{ form.title }}
+
+                <label for="{{ form.content.id_for_label }}">Contenu :</label>
+                {{ form.content }}
+
+                <label for="{{ form.image.id_for_label }}">Image :</label>
+                {{ form.image }}
+
+                <button type="submit" class="btn-submit">Ajouter</button>
+                <a href="{% url 'affiche_posts' %}" class="back-btn">Retour</a>
+            </form>
+        </div>
+    </div>
+
+    <!-- Inclusion du footer -->
+    {% include 'partials/footer.html' %}
+</body>
+</html>

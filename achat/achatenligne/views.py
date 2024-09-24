@@ -164,13 +164,15 @@ def edit_post(request, post_id):
         form = PostForm(request.POST, request.FILES, instance=post)
         if form.is_valid():
             form.save()
-            return redirect('post_detail', post_id=post.id)
+            return redirect('affiche_posts', post_id=post.id)
     else:
         form = PostForm(instance=post)
 
     return render(request, 'gestionpost/modifier_post.html', {'form': form})
+
+
 # Modifier un article (Post) dashboard
-def edit_post(request, post_id):
+def edit_post_dash(request, post_id):
     post = get_object_or_404(Post, id=post_id)
     if request.method == 'POST':
         form = PostForm(request.POST, request.FILES, instance=post)
