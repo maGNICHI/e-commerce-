@@ -16,15 +16,14 @@ def afficher_categories(request):
     categories = Category.objects.all()
     return render(request, 'affichecatg.html', {'categories': categories})
 
-
 def ajouter_categorie(request):
     if request.method == 'POST':
         form = CategoryForm(request.POST)
         if form.is_valid():
             form.save()
-            return redirect('afficher_categories')  # Redirige après ajout de la catégorie
+            return redirect('afficher_categories') 
     else:
-        form = CategoryForm()  # Formulaire vide pour l'ajout d'une nouvelle catégorie
+        form = CategoryForm()  
     
     return render(request, 'ajouter_categorie.html', {'form': form})
 def delete_category(request, category_id):
