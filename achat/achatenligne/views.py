@@ -159,6 +159,7 @@ def ajouter_post_dash(request):
 
 
 # Modifier un article (Post)
+
 def edit_post(request, post_id):
     post = get_object_or_404(Post, id=post_id)
     if request.method == 'POST':
@@ -171,7 +172,6 @@ def edit_post(request, post_id):
 
     return render(request, 'gestionpost/modifier_post.html', {'form': form})
 
-
 # Modifier un article (Post) dashboard
 def edit_post_dash(request, post_id):
     post = get_object_or_404(Post, id=post_id)
@@ -179,7 +179,7 @@ def edit_post_dash(request, post_id):
         form = PostForm(request.POST, request.FILES, instance=post)
         if form.is_valid():
             form.save()
-            return redirect('post_detail_dash', post_id=post.id)
+            return redirect('affiche_posts_dash', post_id=post.id)
     else:
         form = PostForm(instance=post)
 
