@@ -1,3 +1,8 @@
+<head>
+    <!-- Font Awesome CDN -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+
 {% extends "base.html" %}
 
 {% block title %}Liste des Posts{% endblock %}
@@ -16,6 +21,8 @@
         <tr>
             <th style="border: 1px solid #dddddd; padding: 8px;">ID</th>
             <th style="border: 1px solid #dddddd; padding: 8px;">Titre</th>
+            <th style="border: 1px solid #dddddd; padding: 8px;">Description</th> <!-- Ajout de la description -->
+            <th style="border: 1px solid #dddddd; padding: 8px;">Date de création</th> <!-- Ajout de la date de création -->
             <th style="border: 1px solid #dddddd; padding: 8px;">Image</th>
             <th style="border: 1px solid #dddddd; padding: 8px;">Nombre de Commentaires</th>
             <th style="border: 1px solid #dddddd; padding: 8px;">Actions</th>
@@ -24,15 +31,25 @@
         <tr>
             <td style="border: 1px solid #dddddd; padding: 8px;">{{ post.id }}</td>
             <td style="border: 1px solid #dddddd; padding: 8px;">{{ post.title }}</td>
+            <td style="border: 1px solid #dddddd; padding: 8px;">{{ post.content|truncatechars:50  }}</td> <!-- Affichage de la description -->
+            <td style="border: 1px solid #dddddd; padding: 8px;">{{ post.created_at|date:"d M Y H:i" }}</td> <!-- Affichage de la date de création -->
             <td style="border: 1px solid #dddddd; padding: 8px;">
-                <img src="{{ post.image.url }}" alt="Image de {{ post.title }}" style="max-width: 100px; height: auto;"> <!-- Image du post -->
+                <img src="{{ post.image.url }}" alt="Image de {{ post.title }}" style="max-width: 100px; height: auto;">
             </td>
-            <td style="border: 1px solid #dddddd; padding: 8px;">{{ post.comments.count }}</td> <!-- Compte des commentaires -->
+            <td style="border: 1px solid #dddddd; padding: 8px;">{{ post.comments.count }}</td>
             <td style="border: 1px solid #dddddd; padding: 8px;">
-                <a href="/dashboard/posts/edit/{{ post.id }}" class="btn btn-warning btn-sm">Modifier</a>
+                <a href="/dashboard/posts/edit/{{ post.id }}" class="btn btn-warning btn-sm">
+                    <i class="fas fa-edit"></i> <!-- Icon for edit -->
+                </a>
+                <a href="{% url 'post_detail_dash' post.id %}" class="btn btn-info btn-sm" style="margin-left: 5px;">
+                    <i class="fas fa-info-circle"></i> <!-- Icon for details -->
+                </a>
+                
                 <form action="{% url 'delete_post' post.id %}" method="post" style="display:inline;">
                     {% csrf_token %}
-                    <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce post ?');">Supprimer</button>
+                    <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce post ?');">
+                        <i class="fas fa-trash-alt"></i> <!-- Icon for delete -->
+                    </button>
                 </form>
             </td>
         </tr>

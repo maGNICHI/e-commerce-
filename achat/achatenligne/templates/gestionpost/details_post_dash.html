@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block title %}Détails du Post{% endblock %}
+
+{% block header %}
+    <h1>Détails du Post</h1>
+{% endblock %}
+
+{% block content %}
+<section class="content">
+    <!-- Post Details -->
+    <div class="post-details">
+        <h2>{{ post.title }}</h2>
+        <img src="{{ post.image.url }}" alt="Image de {{ post.title }}" style="max-width: 300px; height: auto;">
+        <p><strong>Description:</strong> {{ post.content }}</p>
+        <p><strong>Date de création:</strong> {{ post.created_at|date:"d-m-Y H:i" }}</p>
+        <p><strong>Nombre de Commentaires:</strong> {{ post.comments.count }}</p>
+    </div>
+
+    <!-- Comments Section -->
+    <h3>Commentaires:</h3>
+    <ul>
+        {% for comment in comments %}
+            <li>
+                <p><strong>{{ comment.author }}</strong> le {{ comment.created_at|date:"d-m-Y H:i" }}</p>
+                <p>{{ comment.content }}</p>
+            </li>
+        {% empty %}
+            <li>Aucun commentaire pour ce post.</li>
+        {% endfor %}
+    </ul>
+
+    <!-- Back Button -->
+    <a href="{% url 'affiche_posts_dash' %}" class="btn btn-secondary">
+        <i class="bi bi-arrow-left"></i> Retour à la liste des posts
+    </a>
+</section>
+{% endblock %}

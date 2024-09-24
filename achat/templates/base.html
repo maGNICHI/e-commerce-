@@ -293,12 +293,29 @@
       </ul>
   </li>
 
-            <li class="treeview">
-                <a href="/dashboard/post/">
-                  <i class="fa fa-book"></i> <span>Post</span>
-                </a>
-            </li>
 
+  <li class="treeview">
+    <a href="#">
+        <i class=""></i> <span>Gestion Post</span>
+        <span class="pull-right-container">
+            <i class="fa fa-angle-left pull-right"></i>
+        </span>
+    </a>
+    <ul class="treeview-menu">
+        <li>
+            <a href="/dashboard/post/">
+                <i class="fa fa-edit"></i> <span>Post</span>
+            </a>
+        </li>
+        <li>
+            <a href="/dashboard/posts/details/{{ post.id }}/">
+                <i class="fa fa-edit"></i> <span>detail de post</span>
+            </a>
+        </li>
+    </ul>
+</li>
+
+       
   <li class="treeview">
       <a href="#">
           <i class="fa fa-book"></i> <span>Réclamations</span>

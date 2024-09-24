@@ -95,8 +95,10 @@ def index(request):
 def affiche_posts(request):
     posts = Post.objects.all().order_by('-created_at')  # Trier par date
     return render(request, 'gestionpost/affiche_posts.html', {'posts': posts})
-
-
+#Afficher la liste des articles (Posts) patrie dashboard
+def affiche_postsdash(request):
+    posts = Post.objects.all()
+    return render(request, 'gestionpost/affiche_postdash.html', {'posts': posts})
 # Afficher les détails d'un article (Post) avec ses commentaires (Comments)
 def post_detail(request, post_id):
     post = get_object_or_404(Post, id=post_id)
@@ -114,7 +116,22 @@ def post_detail(request, post_id):
 
     return render(request, 'gestionpost/post_detail.html', {'post': post, 'comments': comments, 'form': form})
 
+# Afficher les détails d'un article (Post) avec ses commentaires (Comments) pour dashboard
+def post_detail_dash(request, post_id):
+    post = get_object_or_404(Post, id=post_id)
+    comments = post.comments.all()
+    
+    if request.method == 'POST':
+        form = CommentForm(request.POST)
+        if form.is_valid():
+            comment = form.save(commit=False)
+            comment.post = post
+            comment.save()
+            return redirect('post_detail_dash', post_id=post_id)
+    else:
+        form = CommentForm()
 
+    return render(request, 'gestionpost/details_post_dash.html', {'post': post, 'comments': comments, 'form': form})
 
 # Ajouter un nouvel article (Post)
 def ajouter_post(request):
@@ -127,6 +144,7 @@ def ajouter_post(request):
         form = PostForm()
 
     return render(request, 'gestionpost/ajouter_post.html', {'form': form})
+
 
 # Modifier un article (Post)
 def edit_post(request, post_id):
