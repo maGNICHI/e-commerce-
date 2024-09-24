@@ -8,17 +8,15 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 
     <style>
-        /* Réduire la largeur du conteneur */
         .timeline-body {
             border: 1px solid #ccc;
             border-radius: 10px;
             padding: 10px;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
             max-width: 600px;
-            margin: 20px auto; /* Centrer le conteneur */
+            margin: 20px auto;
         }
 
-        /* Réduire les dimensions de l'image de profil */
         .timeline-header .userimage img {
             border-radius: 50%;
             width: 30px;
@@ -34,7 +32,7 @@
         .timeline-header .text-muted {
             font-size: 12px;
             color: #999;
-            margin-left: auto; /* Déplacer à droite */
+            margin-left: auto;
         }
 
         .timeline-content {
@@ -50,20 +48,22 @@
             color: #555;
             margin-bottom: 10px;
         }
+
         .timeline-content img {
-            max-width: 100%; /* Empêche que l'image dépasse la largeur du conteneur */
-            height: auto; /* Maintient les proportions de l'image */
+            max-width: 100%;
+            height: auto;
             display: block;
-            margin: 10px 0; /* Espacement autour de l'image */
+            margin: 10px 0;
         }
+
         .timeline-footer {
             display: flex;
-            justify-content: flex-end; /* Aligner à droite */
+            justify-content: flex-end;
             margin-top: 10px;
         }
 
         .timeline-footer a {
-            margin-left: 10px; /* Espacement à gauche */
+            margin-left: 10px;
             color: #777;
             text-decoration: none;
         }
@@ -90,10 +90,8 @@
     </style>
 </head>
 <body>
-    <!-- Inclusion du header -->
     {% include 'partials/header.html' %}
 
-    <!-- Contenu spécifique à la page articles -->
     <div class="row">
         <div class="col-md-12">
             <div class="tab-content p-5">
@@ -123,16 +121,13 @@
                             </div>
 
                             <div class="timeline-footer">
-                                <a href="{% url 'edit_post' post.id %}" title="Modifier">
-                                    <i class="fas fa-pencil-alt fa-fw"></i>
-                                </a>
+                               
                                 <a href="{% url 'delete_post' post.id %}" title="Supprimer" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cet article ?');">
                                     <i class="fas fa-trash-alt fa-fw"></i>
                                 </a>
                                 <a href="{% url 'post_detail' post.id %}" title="Commenter">
                                     <i class="fas fa-comments fa-fw"></i>
                                 </a>
-                               
                             </div>
                         </div>
                     </li>
@@ -144,7 +139,6 @@
         </div>
     </div>
 
-    <!-- Inclusion du footer -->
     {% include 'partials/footer.html' %}
 </body>
 </html>

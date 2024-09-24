@@ -151,11 +151,12 @@ def ajouter_post_dash(request):
         form = PostForm(request.POST, request.FILES)
         if form.is_valid():
             form.save()
-            return redirect('post_detail_dash')
+            return redirect('affiche_posts_dash')
     else:
         form = PostForm()
 
     return render(request, 'gestionpost/ajouter_post_dash.html', {'form': form})
+
 
 # Modifier un article (Post)
 def edit_post(request, post_id):
@@ -187,7 +188,7 @@ def edit_post_dash(request, post_id):
 def delete_postdash(request, post_id):
     post = get_object_or_404(Post, id=post_id)  # Récupère le produit ou retourne 404 s'il n'existe pas
     post.delete()  # Supprime le produit
-    return redirect('affiche_postsdash')  # Redirige vers la liste des produits
+    return redirect('affiche_posts_dash')  # Redirige vers la liste des produits
 
 # Supprimer un article (Post)
 def delete_post(request, post_id):
