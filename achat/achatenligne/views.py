@@ -72,7 +72,7 @@ def edit_product(request, product_id):
         form = ProductForm(instance=product)  # Pré-remplir le formulaire avec les données du produit
 
     return render(request, 'modifierproduit.html', {'form': form})
-from django.shortcuts import get_object_or_404, redirect
+
 
 def delete_product(request, product_id):
     product = get_object_or_404(Product, id=product_id)  # Récupère le produit ou retourne 404 s'il n'existe pas
@@ -127,7 +127,7 @@ def post_detail_dash(request, post_id):
             comment = form.save(commit=False)
             comment.post = post
             comment.save()
-            return redirect('post_detail_dash', post_id=post_id)
+            return redirect('affiche_posts_dash', post_id=post_id)
     else:
         form = CommentForm()
 
@@ -145,6 +145,17 @@ def ajouter_post(request):
 
     return render(request, 'gestionpost/ajouter_post.html', {'form': form})
 
+# Ajouter un nouvel article (Post) dashboard
+def ajouter_post_dash(request):
+    if request.method == 'POST':
+        form = PostForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()
+            return redirect('post_detail_dash')
+    else:
+        form = PostForm()
+
+    return render(request, 'gestionpost/ajouter_post_dash.html', {'form': form})
 
 # Modifier un article (Post)
 def edit_post(request, post_id):
@@ -158,14 +169,29 @@ def edit_post(request, post_id):
         form = PostForm(instance=post)
 
     return render(request, 'gestionpost/modifier_post.html', {'form': form})
+# Modifier un article (Post) dashboard
+def edit_post(request, post_id):
+    post = get_object_or_404(Post, id=post_id)
+    if request.method == 'POST':
+        form = PostForm(request.POST, request.FILES, instance=post)
+        if form.is_valid():
+            form.save()
+            return redirect('post_detail_dash', post_id=post.id)
+    else:
+        form = PostForm(instance=post)
+
+    return render(request, 'gestionpost/modifier_post_dash.html', {'form': form})
+
+def delete_postdash(request, post_id):
+    post = get_object_or_404(Post, id=post_id)  # Récupère le produit ou retourne 404 s'il n'existe pas
+    post.delete()  # Supprime le produit
+    return redirect('affiche_postsdash')  # Redirige vers la liste des produits
 
 # Supprimer un article (Post)
 def delete_post(request, post_id):
     post = get_object_or_404(Post, id=post_id)
-    if request.method == 'POST':
-        post.delete()
-        return redirect('affiche_posts')
-    return render(request, 'gestionpost/affiche_posts.html', {'post': post})
+    post.delete()
+    return redirect('affiche_posts')
 
 # Ajouter un commentaire à un article (Post)
 def ajouter_comment(request, post_id):

@@ -22,7 +22,7 @@
     <ul>
         {% for comment in comments %}
             <li>
-                <p><strong>{{ comment.author }}</strong> le {{ comment.created_at|date:"d-m-Y H:i" }}</p>
+                <p> le {{ comment.created_at|date:"d-m-Y H:i" }}</p>
                 <p>{{ comment.content }}</p>
             </li>
         {% empty %}

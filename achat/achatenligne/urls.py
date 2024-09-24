@@ -13,9 +13,9 @@ urlpatterns = [
     path('dashboard/produits/edit/<int:product_id>/', views.edit_product, name='edit_product'),
     path('dashboard/produits/delete/<int:product_id>/', views.delete_product, name='delete_product'),
     path('dashboard/post/', views.affiche_postsdash, name='affiche_posts_dash'),
-    path('dashboard/post/ajouter/', views.ajouter_post, name='ajouter_post'),
+    path('dashboard/post/ajouter/', views.ajouter_post_dash, name='ajouter_post_dash'),
     path('dashboard/post/edit/<int:id>/', views.edit_post, name='edit_post'),
-    path('dashboard/post/delete/<int:id>/', views.delete_post, name='delete_post'),
+    path('dashboard/post/delete/<int:id>/', views.delete_postdash, name='delete_postdash'),
     path('dashboard/posts/details/<int:post_id>/', views.post_detail_dash, name='post_detail_dash'),
 
     #template

@@ -14,7 +14,7 @@
 {% block content %}
 <section class="content">
 
-    <a href="/dashboard/posts/ajouter/" class="btn btn-primary" style="margin-bottom: 10px;">
+    <a href="/dashboard/post/ajouter/" class="btn btn-primary" style="margin-bottom: 10px;">
         Ajouter un Post
     </a>
     <table style="width: 100%; border-collapse: collapse;">
@@ -45,7 +45,7 @@
                     <i class="fas fa-info-circle"></i> <!-- Icon for details -->
                 </a>
                 
-                <form action="{% url 'delete_post' post.id %}" method="post" style="display:inline;">
+                <form action="{% url 'delete_postdash' post.id %}" method="post" style="display:inline;">
                     {% csrf_token %}
                     <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce post ?');">
                         <i class="fas fa-trash-alt"></i> <!-- Icon for delete -->
