@@ -17,7 +17,6 @@ def afficher_categories(request):
     return render(request, 'affichecatg.html', {'categories': categories})
 
 
-
 def ajouter_categorie(request):
     if request.method == 'POST':
         form = CategoryForm(request.POST)
