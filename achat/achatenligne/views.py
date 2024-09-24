@@ -51,7 +51,7 @@ def ajouter_produit(request):
     if request.method == 'POST':
         form = ProductForm(request.POST, request.FILES)
         if form.is_valid():
-            form.save()  # Sauvegarde le produit
+            form.save() 
             return redirect('afficher_produits')  # Redirige vers la liste des produits
     else:
         form = ProductForm()  # Formulaire vide pour l'ajout d'un nouveau produit
