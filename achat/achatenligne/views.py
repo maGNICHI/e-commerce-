@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from .models import Category
 from .forms import CategoryForm  # Importez le formulaire que vous avez créé
-from .models import Product  # Assure-toi d'importer le modèle Product
+from .models import Product  
 from .forms import ProductForm
 
 # Create your views here.
