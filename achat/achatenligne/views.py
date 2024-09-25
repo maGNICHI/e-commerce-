@@ -76,7 +76,7 @@ def delete_product(request, product_id):
     return redirect('afficher_produits')  
 
 def afficher_produit(request):
-    produits = Product.objects.all()  # Récupère tous les produits de la base
+    produits = Product.objects.all()  
     return render(request, 'produit.html', {'produits': produits})
 
 def afficher_categorie(request):
