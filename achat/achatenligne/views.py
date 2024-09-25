@@ -80,7 +80,7 @@ def afficher_produit(request):
     return render(request, 'produit.html', {'produits': produits})
 
 def afficher_categorie(request):
-    categories = Category.objects.all()  # Récupère toutes les catégories de la base
+    categories = Category.objects.all() 
     return render(request, 'categories.html', {'categories': categories})
 def index(request):
     return render(request, 'index.html')
