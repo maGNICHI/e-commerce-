@@ -63,7 +63,7 @@ def edit_product(request, product_id):
         form = ProductForm(request.POST, request.FILES, instance=product)
         if form.is_valid():
             form.save()
-            return redirect('afficher_produits')  # Redirige vers la liste des produits
+            return redirect('afficher_produits')  
     else:
         form = ProductForm(instance=product)  # Pré-remplir le formulaire avec les données du produit
 
