@@ -72,7 +72,7 @@ from django.shortcuts import get_object_or_404, redirect
 
 def delete_product(request, product_id):
     product = get_object_or_404(Product, id=product_id)  
-    product.delete()  # Supprime le produit
+    product.delete()  
     return redirect('afficher_produits')  # Redirige vers la liste des produits
 
 def afficher_produit(request):
