@@ -12,7 +12,7 @@ def home(request):
     return render(request, 'home.html')
 
 def afficher_categories(request):
-    print("Affichage des catégories")  # Ajoute cette ligne
+    print("Affichage des catégories")  
     categories = Category.objects.all()
     return render(request, 'affichecatg.html', {'categories': categories})
 def ajouter_categorie(request):
