@@ -71,7 +71,7 @@ def edit_product(request, product_id):
 from django.shortcuts import get_object_or_404, redirect
 
 def delete_product(request, product_id):
-    product = get_object_or_404(Product, id=product_id)  # Récupère le produit ou retourne 404 s'il n'existe pas
+    product = get_object_or_404(Product, id=product_id)  
     product.delete()  # Supprime le produit
     return redirect('afficher_produits')  # Redirige vers la liste des produits
 
