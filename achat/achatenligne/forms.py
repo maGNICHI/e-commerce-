@@ -33,5 +33,5 @@ class ProductForm(forms.ModelForm):
         self.fields['category'] = forms.ModelChoiceField(
             queryset=Category.objects.all(),
             widget=forms.Select(attrs={'class': 'champ-texte'}),
-            empty_label="Sélectionnez une catégorie"  # Option par défaut
+            empty_label="Sélectionnez une catégorie" 
         )
