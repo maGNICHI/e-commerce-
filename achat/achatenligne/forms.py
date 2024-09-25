@@ -12,7 +12,6 @@ class CategoryForm(forms.ModelForm):
         self.fields['description'].widget.attrs.update({'class': 'champ-texte'})
 
 
-
 class ProductForm(forms.ModelForm):
     class Meta:
         model = Product
