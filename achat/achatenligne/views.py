@@ -65,7 +65,7 @@ def edit_product(request, product_id):
             form.save()
             return redirect('afficher_produits')  
     else:
-        form = ProductForm(instance=product)  # Pré-remplir le formulaire avec les données du produit
+        form = ProductForm(instance=product)  
 
     return render(request, 'modifierproduit.html', {'form': form})
 from django.shortcuts import get_object_or_404, redirect
