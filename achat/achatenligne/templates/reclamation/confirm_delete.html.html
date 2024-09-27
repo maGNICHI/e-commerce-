@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block title %}Confirmer Suppression{% endblock %}
+
+{% block header %}
+    <h1>Confirmer Suppression</h1>
+{% endblock %}
+
+{% block content %}
+<section class="content">
+    <p>Êtes-vous sûr de vouloir supprimer la réclamation : "{{ reclamation.sujet }}" ?</p>
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-danger">Supprimer</button>
+        <a href="{% url 'reclamation_lists' %}" class="btn btn-secondary">Annuler</a>
+    </form>
+</section>
+{% endblock %}

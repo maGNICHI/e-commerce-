@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Liste des Réclamations</title>
+    <style>
+        /* Styles for the reclamation list */
+        .card {
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            padding: 16px;
+            margin: 10px;
+            width: 100%;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            background-color: #f9f9f9;
+        }
+
+        .card h2 {
+            font-size: 20px;
+            margin-bottom: 10px;
+            color: #333;
+        }
+
+        .card p {
+            color: #555;
+            margin-bottom: 8px;
+        }
+
+        .card .date, .card .priorite {
+            font-size: 14px;
+            font-style: italic;
+            margin-top: 5px;
+        }
+
+        /* Container styling */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Title */
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+    </style>
+</head>
+<body>
+    <!-- Include header -->
+    {% include 'partials/header.html' %}
+
+    <!-- Reclamation List -->
+    <div class="reclamations">
+        {% for reclamation in reclamations %}
+            <div class="card">
+                <h2>{{ reclamation.sujet }}</h2>
+                <p>{{ reclamation.description }}</p>
+                <p class="priorite">Priorité : {{ reclamation.priorite }}</p>
+                <p class="date">Date : {{ reclamation.date_created|date:"d/m/Y" }}</p>
+                
+                <!-- Edit and Delete buttons -->
+                <a href="{% url 'reclamation_edit' reclamation.pk %}" class="btn btn-primary">Edit</a>
+                <form action="{% url 'reclamation_delete' reclamation.pk %}" method="POST" style="display:inline;">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-danger">Delete</button>
+                </form>
+            </div>
+        {% empty %}
+            <p>Aucune réclamation pour le moment.</p>
+        {% endfor %}
+    </div>
+    
+
+    <!-- Include footer -->
+    {% include 'partials/footer.html' %}
+</body>
+</html>

@@ -1,6 +1,8 @@
 from django import forms
-from .models import Category
-from .models import Product
+
+from .models import Category, Product, Reclamation, Response
+
+
 class CategoryForm(forms.ModelForm):
     class Meta:
         model = Category
@@ -35,3 +37,33 @@ class ProductForm(forms.ModelForm):
             widget=forms.Select(attrs={'class': 'champ-texte'}),
             empty_label="Sélectionnez une catégorie"  # Option par défaut
         )
+
+class ReclamationForm(forms.ModelForm):
+    class Meta:
+        model = Reclamation
+        fields = ['sujet', 'description', 'priorite']
+        widgets = {
+            'description': forms.Textarea(attrs={'rows': 4, 'cols': 10}),
+            'sujet': forms.TextInput(attrs={'placeholder': 'Sujet de la réclamation'}),
+        }
+
+    def __init__(self, *args, **kwargs):
+        super(ReclamationForm, self).__init__(*args, **kwargs)
+        self.fields['sujet'].widget.attrs.update({'class': 'champ-texte'})
+        self.fields['description'].widget.attrs.update({'class': 'champ-texte'})
+        self.fields['priorite'].widget.attrs.update({'class': 'champ-texte'})
+
+
+class ResponseForm(forms.ModelForm):
+    class Meta:
+        model = Response
+        fields = ['message', 'reclamation']
+        widgets = {
+            'message': forms.Textarea(attrs={'rows': 4, 'cols': 10}),
+            'reclamation': forms.Select(attrs={'class': 'champ-texte'}),
+        }
+
+    def __init__(self, *args, **kwargs):
+        super(ResponseForm, self).__init__(*args, **kwargs)
+        self.fields['message'].widget.attrs.update({'class': 'champ-texte'})
+        self.fields['reclamation'].widget.attrs.update({'class': 'champ-texte'})

@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block title %}Ajouter une Réponse{% endblock %}
+
+{% block header %}
+    <h1>Ajouter une Réponse pour "{{ reclamation.sujet }}"</h1>
+{% endblock %}
+
+{% block content %}
+<section class="content">
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-primary">Enregistrer</button>
+        <a href="{% url 'reclamation_lists' %}" class="btn btn-secondary">Annuler</a>
+    </form>
+</section>
+{% endblock %}

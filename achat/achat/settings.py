@@ -82,18 +82,27 @@ WSGI_APPLICATION = 'achat.wsgi.application'
    #     'NAME': BASE_DIR / 'db.sqlite3',
     #}
 #}
+
+#DATABASES = {
+ #   'default': {
+  #      'ENGINE': 'django.db.backends.sqlite3',
+   #     'NAME': BASE_DIR / 'db.sqlite3',
+    #}
+#}
+
+
 DATABASES = {
     'default': {
-        'ENGINE':'django.db.backends.mysql',
-        'NAME': 'achat',
-        'HOST': 'localhost',
-        'USER':'root',
-        'PASSWORD':'',
-        'PORT': '3306',
-        
-
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'achat',         # Name of your database
+        'USER': 'root',          # MySQL username
+        'PASSWORD': 'azerty2001',          # Leave this empty if there's no password
+        'HOST': '127.0.0.1',     # MySQL server address
+        'PORT': '3306',          # Default XAMPP MySQL port
     }
 }
+
+
 
 # Password validation
 # https://docs.djangoproject.com/en/4.1/ref/settings/#auth-password-validators

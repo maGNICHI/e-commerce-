@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ajouter une Réclamation</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        .container {
+            max-width: 600px;
+            margin: auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: #555;
+        }
+        input, textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+        button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            width: 100%;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        a {
+            display: inline-block;
+            margin-top: 15px;
+            text-align: center;
+            color: #007bff;
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+{% include 'partials/header.html' %}
+<body>
+
+  
+    
+    <div class="container">
+        <h1>Ajouter une Réclamation</h1>
+        <form method="post" action="{% url 'reclamation_create' %}">
+            {% csrf_token %}
+            
+            <!-- Sujet Field -->
+            <div class="form-group">
+                {{ form.sujet.label_tag }}
+                {{ form.sujet }}
+                {{ form.sujet.errors }}
+            </div>
+
+            <!-- Description Field -->
+            <div class="form-group">
+                {{ form.description.label_tag }}
+                {{ form.description }}
+                {{ form.description.errors }}
+            </div>
+
+            <!-- Priorité Field -->
+            <div class="form-group">
+                {{ form.priorite.label_tag }}
+                {{ form.priorite }}
+                {{ form.priorite.errors }}
+            </div>
+
+            <!-- Submit Button -->
+            <button type="submit">Envoyer la Réclamation</button>
+        </form>
+        <a href="{% url 'reclamation_list' %}">Retour à la liste des réclamations</a>
+    </div>
+
+    {% include 'partials/footer.html' %}
+
+</body>
+</html>

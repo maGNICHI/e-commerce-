@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% block title %}Liste des Réclamations{% endblock %}
+
+{% block header %}
+    <h1>Liste des Réclamations</h1>
+{% endblock %}
+
+{% block content %}
+<section class="content">
+    <a href="/dashboard/reclamation/ajouter/" class="btn btn-primary" style="margin-bottom: 10px;">
+        Ajouter une Réclamation
+    </a>
+    <table style="width: 100%; border-collapse: collapse;">
+        <tr>
+            <th style="border: 1px solid #dddddd; padding: 8px;">Sujet</th>
+            <th style="border: 1px solid #dddddd; padding: 8px;">Description</th>
+            <th style="border: 1px solid #dddddd; padding: 8px;">Priorité</th>
+            <th style="border: 1px solid #dddddd; padding: 8px;">Actions</th>
+        </tr>
+        {% for reclamation in reclamations %}
+        <tr>
+            <td style="border: 1px solid #dddddd; padding: 8px;">{{ reclamation.sujet }}</td>
+            <td style="border: 1px solid #dddddd; padding: 8px;">{{ reclamation.description }}</td>
+            <td style="border: 1px solid #dddddd; padding: 8px;">{{ reclamation.priorite }}</td>
+            <td style="border: 1px solid #dddddd; padding: 8px;">
+                <a href="/dashboard/reclamation/editReclamation/{{ reclamation.id }}" class="btn btn-warning btn-sm">Modifier</a>
+                <form action="/dashboard/reclamation/deleteReclamation/{{ reclamation.id }}" method="post" style="display:inline;">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette réclamation ?');">Supprimer</button>
+                </form>
+                <a href="{% url 'response_create' reclamation.id %}" class="btn btn-success btn-sm" style="margin-left: 5px;">Ajouter une Réponse</a>
+            </td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="4" style="border: 1px solid #dddddd; padding: 8px; text-align: center;">Aucune réclamation à afficher.</td>
+        </tr>
+        {% endfor %}
+    </table>
+</section>
+{% endblock %}

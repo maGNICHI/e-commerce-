@@ -3,6 +3,8 @@ from .models import Category
 from .forms import CategoryForm  # Importez le formulaire que vous avez créé
 from .models import Product  # Assure-toi d'importer le modèle Product
 from .forms import ProductForm
+from .models import Reclamation, Response
+from .forms import ReclamationForm, ResponseForm
 
 # Create your views here.
 def BASE(request):
@@ -85,3 +87,112 @@ def afficher_categorie(request):
     return render(request, 'categories.html', {'categories': categories})
 def index(request):
     return render(request, 'index.html')
+
+
+# View for front-end
+def reclamation_list(request):
+    reclamations = Reclamation.objects.all()
+    return render(request, 'reclamation/reclamation_list.html', {'reclamations': reclamations})
+
+
+def reclamation_create(request):
+    if request.method == "POST":
+        form = ReclamationForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('reclamation_list')
+    else:
+        form = ReclamationForm()
+    return render(request, 'reclamation/reclamation_form.html', {'form': form})
+
+
+# Edit a Reclamation
+def reclamation_edit(request, pk):
+    reclamation = get_object_or_404(Reclamation, pk=pk)
+    if request.method == "POST":
+        form = ReclamationForm(request.POST, instance=reclamation)
+        if form.is_valid():
+            form.save()
+            return redirect('reclamation_list')
+    else:
+        form = ReclamationForm(instance=reclamation)
+    return render(request, 'reclamation/edit.html', {'form': form})
+
+# Delete a Reclamation
+def reclamation_delete(request, pk):
+    reclamation = get_object_or_404(Reclamation, pk=pk)
+    if request.method == "POST":
+        reclamation.delete()
+        return redirect('reclamation_list')
+    return render(request, 'reclamation/delete.html', {'reclamation': reclamation})
+
+# List responses for a specific Reclamation
+def response_list(request, reclamation_id):
+    reclamation = get_object_or_404(Reclamation, id=reclamation_id)
+    responses = reclamation.responses.all()
+    return render(request, 'response_list.html', {'reclamation': reclamation, 'responses': responses})
+
+# Add a new Response
+def response_create(request, reclamation_id):
+    reclamation = get_object_or_404(Reclamation, id=reclamation_id)
+    if request.method == "POST":
+        form = ResponseForm(request.POST)
+        if form.is_valid():
+            response = form.save(commit=False)
+            response.reclamation = reclamation
+            response.save()
+            return redirect('response_list', reclamation_id=reclamation.id)
+    else:
+        form = ResponseForm()
+    return render(request, 'reclamation/response_create.html', {'form': form, 'reclamation': reclamation})
+
+# Edit a Response (optional)
+def response_edit(request, reclamation_id, response_id):
+    reclamation = get_object_or_404(Reclamation, id=reclamation_id)
+    response = get_object_or_404(Response, id=response_id)
+    if request.method == "POST":
+        form = ResponseForm(request.POST, instance=response)
+        if form.is_valid():
+            form.save()
+            return redirect('response_list', reclamation_id=reclamation.id)
+    else:
+        form = ResponseForm(instance=response)
+    return render(request, 'response_form.html', {'form': form, 'reclamation': reclamation})
+
+# Delete a Response (optional)
+def response_delete(request, reclamation_id, response_id):
+    response = get_object_or_404(Response, id=response_id)
+    if request.method == "POST":
+        response.delete()
+        return redirect('response_list', reclamation_id=reclamation_id)
+    return render(request, 'response_confirm_delete.html', {'response': response})
+
+
+#daaaachboard
+
+def reclamation_lists(request):
+    reclamations = Reclamation.objects.all()
+    return render(request, 'reclamation/listreclamation.html', {'reclamations': reclamations})
+
+def edit_reclamation(request, reclamation_id):
+    reclamation = get_object_or_404(Reclamation, id=reclamation_id)
+    
+    if request.method == 'POST':
+        form = ReclamationForm(request.POST, instance=reclamation)
+        if form.is_valid():
+            form.save()
+            return redirect('reclamation_lists')  # Redirect to the list view after saving
+    else:
+        form = ReclamationForm(instance=reclamation)
+
+    return render(request, 'reclamation/editReclamation.html', {'form': form, 'reclamation': reclamation})
+
+# View for deleting a reclamation
+def delete_reclamation(request, reclamation_id):
+    reclamation = get_object_or_404(Reclamation, id=reclamation_id)
+    
+    if request.method == 'POST':
+        reclamation.delete()
+        return redirect('reclamation_lists')  # Redirect to the list view after deletion
+
+    return render(request, 'reclamation/confirm_delete.html', {'reclamation': reclamation})
