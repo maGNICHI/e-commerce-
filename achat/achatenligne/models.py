@@ -1,61 +1,69 @@
-from django.db import models
-from django.db.models.fields.related import ForeignKey
+from django import forms
+from .models import Category, Product, Reclamation, Response  
 
-# Create your models here.
 
-class Category(models.Model):
-    name = models.CharField(max_length=200)
-    description = models.TextField()
-    date_added = models.DateTimeField(auto_now=True)
 
+class CategoryForm(forms.ModelForm):
     class Meta:
-        ordering = ['-date_added']
-    
-    def __str__(self):
-        return self.name    
+        model = Category
+        fields = ['name', 'description']
+
+    def __init__(self, *args, **kwargs):
+        super(CategoryForm, self).__init__(*args, **kwargs)
+        self.fields['name'].widget.attrs.update({'class': 'champ-texte'})
+        self.fields['description'].widget.attrs.update({'class': 'champ-texte'})
 
 
-class Product(models.Model):
-    title = models.CharField(max_length=200)
-    price = models.FloatField()
-    description = models.TextField()
-    category = ForeignKey(Category, related_name='categorie', on_delete=models.CASCADE) 
-    image = models.ImageField(upload_to='images/')
-    date_added = models.DateTimeField(auto_now=True)
-    
+class ProductForm(forms.ModelForm):
     class Meta:
-        ordering = ['-date_added']  
+        model = Product
+        fields = ['title', 'price', 'description', 'category', 'image']
+        widgets = {
+            'description': forms.Textarea(attrs={'rows': 4, 'cols': 10}),
+            'title': forms.TextInput(attrs={'placeholder': 'Nom du produit'}),
+            'price': forms.TextInput(attrs={'placeholder': 'Prix'}),
+            'image': forms.ClearableFileInput(attrs={'class': 'champ-texte'}),
+        }
 
-    def __str__(self):
-        return self.title  
+    def __init__(self, *args, **kwargs):
+        super(ProductForm, self).__init__(*args, **kwargs)
+        self.fields['title'].widget.attrs.update({'class': 'champ-texte'})
+        self.fields['price'].widget.attrs.update({'class': 'champ-texte'})
+        self.fields['description'].widget.attrs.update({'class': 'champ-texte'})
+        self.fields['image'].widget.attrs.update({'class': 'champ-texte'})
+        self.fields['category'] = forms.ModelChoiceField(
+            queryset=Category.objects.all(),
+            widget=forms.Select(attrs={'class': 'champ-texte'}),
+            empty_label="Sélectionnez une catégorie"
+        )
 
 
-class Reclamation(models.Model):
-    PRIORITE_CHOICES = [
-        (1, 'Faible'),
-        (2, 'Moyenne'),
-        (3, 'Haute'),
-    ]
-    
-    sujet = models.CharField(max_length=200)
-    description = models.TextField()
-    date_creation = models.DateTimeField(auto_now_add=True)
-    priorite = models.IntegerField(choices=PRIORITE_CHOICES, default=2)  # Priorité par défaut "Moyenne"
-
+class ReclamationForm(forms.ModelForm):
     class Meta:
-        ordering = ['-date_creation']
+        model = Reclamation
+        fields = ['sujet', 'description', 'priorite']
+        widgets = {
+            'description': forms.Textarea(attrs={'rows': 4, 'cols': 10}),
+            'sujet': forms.TextInput(attrs={'placeholder': 'Sujet de la réclamation'}),
+        }
 
-    def __str__(self):
-        return f'{self.sujet} - Priorité: {self.get_priorite_display()}' 
+    def __init__(self, *args, **kwargs):
+        super(ReclamationForm, self).__init__(*args, **kwargs)
+        self.fields['sujet'].widget.attrs.update({'class': 'champ-texte'})
+        self.fields['description'].widget.attrs.update({'class': 'champ-texte'})
+        self.fields['priorite'].widget.attrs.update({'class': 'champ-texte'})
 
 
-class Response(models.Model):
-    message = models.TextField()
-    date_response = models.DateTimeField(auto_now_add=True)
-    reclamation = ForeignKey(Reclamation, related_name='responses', on_delete=models.CASCADE)
-
+class ResponseForm(forms.ModelForm):
     class Meta:
-        ordering = ['-date_response']
+        model = Response
+        fields = ['message', 'reclamation']
+        widgets = {
+            'message': forms.Textarea(attrs={'rows': 4, 'cols': 10}),
+            'reclamation': forms.Select(attrs={'class': 'champ-texte'}),
+        }
 
-    def __str__(self):
-        return f'Response to {self.reclamation.sujet} on {self.date_response}'
+    def __init__(self, *args, **kwargs):
+        super(ResponseForm, self).__init__(*args, **kwargs)
+        self.fields['message'].widget.attrs.update({'class': 'champ-texte'})
+        self.fields['reclamation'].widget.attrs.update({'class': 'champ-texte'})

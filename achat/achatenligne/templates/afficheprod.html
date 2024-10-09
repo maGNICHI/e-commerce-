@@ -28,7 +28,7 @@
             <td style="border: 1px solid #dddddd; padding: 8px;">{{ produit.category.name }}</td>
             <td style="border: 1px solid #dddddd; padding: 8px;">
                 <img src="{{ produit.image.url }}" alt="Image de {{ produit.title }}" style="max-width: 100px; height: auto;"> <!-- Image du produit -->
-            </td>
+            </td> 
             <td style="border: 1px solid #dddddd; padding: 8px;">
                 <a href="/dashboard/produits/edit/{{ produit.id }}" class="btn btn-warning btn-sm">Modifier</a>
                 <form action="{% url 'delete_product' produit.id %}" method="post" style="display:inline;">
