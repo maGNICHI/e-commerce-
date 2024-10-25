@@ -23,19 +23,27 @@ urlpatterns = [
     # Feedback-related URLs for website feedback
     path('dashboard/website-feedbacks/', views.afficher_website_feedbacks, name='afficher_website_feedbacks'),
     path('website-feedback/', views.afficher_website_feedback, name='afficher_website_feedback'),
-
-
     path('feedback/add/website/', views.ajouter_website_feedback, name='ajouter_website_feedback'),
     path('dashboard/feedback/delete/website/<int:feedback_id>/', views.delete_website_feedbacks, name='delete_website_feedbacks'),
     path('feedback/delete/website/<int:feedback_id>/', views.delete_website_feedback, name='delete_website_feedback'),
-
     path('feedback/edit/website/<int:feedback_id>/', views.edit_website_feedback, name='edit_website_feedback'),
 
-    # Feedback-related URLs for product feedback
-    path('dashboard/product-feedback/', views.afficher_product_feedback, name='afficher_product_feedback'),
-    path('feedback/add/product/', views.ajouter_product_feedback, name='ajouter_product_feedback'),
-    path('feedback/delete/product/<int:feedback_id>/', views.delete_product_feedback, name='delete_product_feedback'),
-    path('feedback/edit/product/<int:feedback_id>/', views.edit_product_feedback, name='edit_product_feedback'),
+# Event CRUD
+    path('dashboard/evenements/', views.afficher_evenements, name='afficher_evenements'),
+    path('evenement/', views.afficher_evenement, name='afficher_evenement'),
+
+    path('dashboard/evenements/add/', views.ajouter_evenement, name='ajouter_evenement'),
+    path('dashboard/evenements/edit/<int:event_id>/', views.edit_evenement, name='edit_evenement'),
+    path('dashboard/evenements/delete/<int:event_id>/', views.delete_evenement, name='delete_evenement'),
+
+    # Sponsor CRUD
+    path('dashboard/sponsors/', views.afficher_sponsors, name='afficher_sponsors'),
+    path('sponsor/', views.afficher_sponsor, name='afficher_sponsor'),
+
+
+    path('dashboard/sponsors/add/', views.ajouter_sponsor, name='ajouter_sponsor'),
+    path('dashboard/sponsors/edit/<int:sponsor_id>/', views.edit_sponsor, name='edit_sponsor'),
+    path('dashboard/sponsors/delete/<int:sponsor_id>/', views.delete_sponsor, name='delete_sponsor'),
 
 ]
  

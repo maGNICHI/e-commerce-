@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+{% block title %}Liste des Sponsors{% endblock %}
+
+{% block header %}
+    <h1>Liste des Sponsors</h1>
+{% endblock %}
+
+{% block content %}
+<section class="content">
+    <a href="/dashboard/sponsors/add/" class="btn btn-primary" style="margin-bottom: 10px;">
+        Ajouter un Sponsor
+    </a>
+    <table style="width: 100%; border-collapse: collapse;">
+        <tr>
+            <th style="border: 1px solid #dddddd; padding: 8px;">Nom du Sponsor</th>
+            <th style="border: 1px solid #dddddd; padding: 8px;">Type de Sponsoring</th>
+            <th style="border: 1px solid #dddddd; padding: 8px;">Événement Associé</th>
+            <th style="border: 1px solid #dddddd; padding: 8px;">Description</th>
+            <th style="border: 1px solid #dddddd; padding: 8px;">Actions</th>
+        </tr>
+        {% for sponsor in sponsors %}
+        <tr>
+            <td style="border: 1px solid #dddddd; padding: 8px;">{{ sponsor.name }}</td>
+            <td style="border: 1px solid #dddddd; padding: 8px;">{{ sponsor.sponsorship_type }}</td>
+            <td style="border: 1px solid #dddddd; padding: 8px;">{{ sponsor.event.event_name }}</td>
+            <td style="border: 1px solid #dddddd; padding: 8px;">{{ sponsor.description }}</td>
+            <td style="border: 1px solid #dddddd; padding: 8px;">
+                <a href="/dashboard/sponsors/edit/{{ sponsor.id }}" class="btn btn-warning btn-sm">Modifier</a>
+                <form action="{% url 'delete_sponsor' sponsor.id %}" method="post" style="display:inline;">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce sponsor ?');">Supprimer</button>
+                </form>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+</section>
+{% endblock %}

@@ -3,8 +3,12 @@ from .models import Category
 from .forms import CategoryForm  # Importez le formulaire que vous avez créé
 from .models import Product  # Assure-toi d'importer le modèle Product
 from .forms import ProductForm
-from .models import WebsiteFeedback, ProductFeedback  # Importez les modèles de feedback
-from .forms import WebsiteFeedbackForm, ProductFeedbackForm  # Importez les formulaires de feedback
+from .models import WebsiteFeedback
+from .forms import WebsiteFeedbackForm
+from .models import Event, Sponsor
+from .forms import EventForm, SponsorForm
+
+
 
 # Create your views here.
 def BASE(request):
@@ -90,9 +94,6 @@ def index(request):
 
 #feedback
 
-# Display website feedback list
-from django.shortcuts import render
-from .models import WebsiteFeedback
 
 def afficher_website_feedbacks(request):
     feedbacks = WebsiteFeedback.objects.all()
@@ -151,38 +152,80 @@ def delete_website_feedback(request, feedback_id):
     return redirect('afficher_website_feedback')
 
 
-# Display product feedback list
-def afficher_product_feedback(request):
-    feedbacks = ProductFeedback.objects.all()
-    return render(request, 'afficher_product_feedback.html', {'feedbacks': feedbacks})
 
-# Add new product feedback
-def ajouter_product_feedback(request):
+
+# Event CRUD
+def afficher_evenements(request):
+    evenements = Event.objects.all()
+    return render(request, 'afficher_evenements.html', {'evenements': evenements})
+
+def ajouter_evenement(request):
     if request.method == 'POST':
-        form = ProductFeedbackForm(request.POST)
+        form = EventForm(request.POST, request.FILES)  # Ensure request.FILES is included
+        if form.is_valid():
+            # Debugging output
+            print(f'Uploaded file: {request.FILES.get("banner_image")}')
+            form.save()
+            return redirect('afficher_evenements')
+    else:
+        form = EventForm()
+    return render(request, 'ajouter_evenement.html', {'form': form})
+
+
+def edit_evenement(request, event_id):
+    evenement = get_object_or_404(Event, id=event_id)
+    if request.method == 'POST':
+        form = EventForm(request.POST,request.FILES, instance=evenement)
         if form.is_valid():
             form.save()
-            return redirect('afficher_product_feedback')
+            return redirect('afficher_evenements')
     else:
-        form = ProductFeedbackForm()
+        form = EventForm(instance=evenement)
+    return render(request, 'modifier_evenement.html', {'form': form})
 
-    return render(request, 'ajouter_product_feedback.html', {'form': form})
+def delete_evenement(request, event_id):
+    evenement = get_object_or_404(Event, id=event_id)
+    evenement.delete()
+    return redirect('afficher_evenements')
 
-# Edit existing product feedback
-def edit_product_feedback(request, feedback_id):
-    feedback = get_object_or_404(ProductFeedback, id=feedback_id)
+def afficher_evenement(request):
+    evenements = Event.objects.all()
+    return render(request, 'afficher_evenementfront.html', {'evenements': evenements})
+
+
+
+
+# Sponsor CRUD
+def afficher_sponsors(request):
+    sponsors = Sponsor.objects.all()
+    return render(request, 'afficher_sponsors.html', {'sponsors': sponsors})
+
+def afficher_sponsor(request):
+    sponsors = Sponsor.objects.all()
+    return render(request, 'afficher_sponsorfront.html', {'sponsors': sponsors})
+
+def ajouter_sponsor(request):
     if request.method == 'POST':
-        form = ProductFeedbackForm(request.POST, instance=feedback)
+        form = SponsorForm(request.POST)
         if form.is_valid():
             form.save()
-            return redirect('afficher_product_feedback')
+            return redirect('afficher_sponsors')
     else:
-        form = ProductFeedbackForm(instance=feedback)
+        form = SponsorForm()
+    return render(request, 'ajouter_sponsor.html', {'form': form})
 
-    return render(request, 'modifier_product_feedback.html', {'form': form})
+def edit_sponsor(request, sponsor_id):
+    sponsor = get_object_or_404(Sponsor, id=sponsor_id)
+    if request.method == 'POST':
+        form = SponsorForm(request.POST, instance=sponsor)
+        if form.is_valid():
+            form.save()
+            return redirect('afficher_sponsors')
+    else:
+        form = SponsorForm(instance=sponsor)
+    return render(request, 'modifier_sponsor.html', {'form': form})
 
-# Delete product feedback
-def delete_product_feedback(request, feedback_id):
-    feedback = get_object_or_404(ProductFeedback, id=feedback_id)
-    feedback.delete()
-    return redirect('afficher_product_feedback')
+def delete_sponsor(request, sponsor_id):
+    sponsor = get_object_or_404(Sponsor, id=sponsor_id)
+    sponsor.delete()
+    return redirect('afficher_sponsors')

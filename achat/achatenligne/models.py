@@ -27,6 +27,7 @@ class Product(models.Model):
         return self.title 
 
 class WebsiteFeedback(models.Model):
+
     comment = models.TextField()
     rating = models.PositiveIntegerField(default=1)  # Rating from 1 to 5
     date_added = models.DateTimeField(auto_now=True)
@@ -38,15 +39,48 @@ class WebsiteFeedback(models.Model):
 
     def __str__(self):
         return f"Website Feedback: {self.comment[:20]}..."  # Show first 20 chars
+    
+class Event(models.Model):
+    EVENT_TYPE_CHOICES = [
+        ('promotion', 'Promotion'),
+        ('seminar', 'Seminar'),
+        ('product_launch', 'Product Launch'),
+        # Add more event types if needed
+    ]
 
-class ProductFeedback(models.Model):
-    product = models.ForeignKey(Product, on_delete=models.CASCADE)  # Reference to Product
-    comment = models.TextField()
-    rating = models.PositiveIntegerField(default=1)  # Rating from 1 to 5
-    date_added = models.DateTimeField(auto_now=True)
+    STATUS_CHOICES = [
+        ('upcoming', 'Upcoming'),
+        ('ongoing', 'Ongoing'),
+        ('completed', 'Completed'),
+    ]
 
-    class Meta:
-        ordering = ['-date_added']
+    event_name = models.CharField(max_length=255)
+    description = models.TextField()
+    start_date = models.DateTimeField()
+    end_date = models.DateTimeField()
+    location = models.CharField(max_length=255)
+    event_type = models.CharField(max_length=50, choices=EVENT_TYPE_CHOICES)
+    max_participants = models.IntegerField(null=True, blank=True)
+    status = models.CharField(max_length=50, choices=STATUS_CHOICES)
+    banner_image = models.ImageField(upload_to='event_banners/', blank=True, null=True)  # Make sure this is correct
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return f"Feedback for {self.product.title}: {self.comment[:20]}..."  # Show first 20 chars
+        return self.event_name
+
+class Sponsor(models.Model):
+    SPONSORSHIP_TYPE_CHOICES = [
+        ('financial', 'Financial'),
+        ('product', 'Product'),
+        # Add more sponsorship types if needed
+    ]
+
+    name = models.CharField(max_length=255)
+    event = models.ForeignKey(Event, on_delete=models.CASCADE)
+    sponsorship_type = models.CharField(max_length=50, choices=SPONSORSHIP_TYPE_CHOICES)
+    description = models.TextField(null=True, blank=True)
+
+    def __str__(self):
+        return self.name
+

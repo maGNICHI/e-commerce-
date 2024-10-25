@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Liste des Sponsors</title>
+    <style>
+        /* Styles basiques pour la carte */
+        .card {
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            padding: 16px;
+            margin: 5px; /* Marge entre les cartes */
+            width: 305px; /* Ajustez la largeur ici */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <!-- Inclusion du header -->
+    {% include 'partials/header.html' %}
+
+    <!-- Contenu spécifique à la page sponsors -->
+    <div class="container">
+        <h1>Nos Sponsors</h1>
+        <div class="sponsors" style="display: flex; justify-content: flex-start; flex-wrap: wrap;">
+            {% for sponsor in sponsors %}
+                <div class="card">
+                    <h2>{{ sponsor.name }}</h2>
+                    <p>Type de Sponsoring : {{ sponsor.sponsorship_type }}</p>
+                    <p>Événement Associé : {{ sponsor.event }}</p>
+                    <p>Description : {{ sponsor.description }}</p>
+                </div>
+            {% empty %}
+                <p>Aucun sponsor disponible pour le moment.</p>
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- Inclusion du footer -->
+    {% include 'partials/footer.html' %}
+</body>
+</html>

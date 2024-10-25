@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+
+{% block title %}Liste des Événements{% endblock %}
+
+{% block header %}
+    <h1>Liste des Événements</h1>
+{% endblock %}
+
+{% block content %}
+<section class="content">
+    <a href="/dashboard/evenements/add/" class="btn btn-primary" style="margin-bottom: 10px;">
+        Ajouter un Événement
+    </a>
+    <table style="width: 100%; border-collapse: collapse;">
+        <tr>
+            <th style="border: 1px solid #dddddd; padding: 8px;">Nom de l'Événement</th>
+            <th style="border: 1px solid #dddddd; padding: 8px;">Description</th>
+            <th style="border: 1px solid #dddddd; padding: 8px;">Lieu</th>
+            <th style="border: 1px solid #dddddd; padding: 8px;">Date de Début</th>
+            <th style="border: 1px solid #dddddd; padding: 8px;">Date de Fin</th>
+            <th style="border: 1px solid #dddddd; padding: 8px;">Type d'Événement</th>
+            <th style="border: 1px solid #dddddd; padding: 8px;">Max Participants</th>
+            <th style="border: 1px solid #dddddd; padding: 8px;">Statut</th>
+            <th style="border: 1px solid #dddddd; padding: 8px;">Image Bannière</th>
+            <th style="border: 1px solid #dddddd; padding: 8px;">Actions</th>
+        </tr>
+        {% for event in evenements %}
+        <tr>
+            <td style="border: 1px solid #dddddd; padding: 8px;">{{ event.event_name }}</td>
+            <td style="border: 1px solid #dddddd; padding: 8px;">{{ event.description }}</td>
+            <td style="border: 1px solid #dddddd; padding: 8px;">{{ event.location }}</td>
+            <td style="border: 1px solid #dddddd; padding: 8px;">{{ event.start_date }}</td>
+            <td style="border: 1px solid #dddddd; padding: 8px;">{{ event.end_date }}</td>
+            <td style="border: 1px solid #dddddd; padding: 8px;">{{ event.get_event_type_display }}</td>
+            <td style="border: 1px solid #dddddd; padding: 8px;">{{ event.max_participants }}</td>
+            <td style="border: 1px solid #dddddd; padding: 8px;">{{ event.get_status_display }}</td>
+            <td style="border: 1px solid #dddddd; padding: 8px;">
+                {% if event.banner_image %}
+                    <img src="{{ event.banner_image.url }}" alt="Bannière de {{ event.event_name }}" style="max-width: 100px; height: auto;">
+                {% else %}
+                    Aucune image
+                {% endif %}
+            </td>
+            <td style="border: 1px solid #dddddd; padding: 8px;">
+                <a href="/dashboard/evenements/edit/{{ event.id }}" class="btn btn-warning btn-sm">Modifier</a>
+                <form action="{% url 'delete_evenement' event.id %}" method="post" style="display:inline;">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cet événement ?');">Supprimer</button>
+                </form>
+            </td>
+        </tr>
+        {% empty %}
+            <tr>
+                <td colspan="10" style="border: 1px solid #dddddd; padding: 8px; text-align: center;">Aucun événement disponible.</td>
+            </tr>
+        {% endfor %}
+    </table>
+</section>
+{% endblock %}

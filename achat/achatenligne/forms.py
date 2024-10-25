@@ -1,5 +1,5 @@
 from django import forms
-from .models import Category, Product, WebsiteFeedback, ProductFeedback  
+from .models import Category, Product, WebsiteFeedback,Event,Sponsor
 
 class CategoryForm(forms.ModelForm):
     class Meta:
@@ -44,12 +44,20 @@ class WebsiteFeedbackForm(forms.ModelForm):
             'image': forms.ClearableFileInput(attrs={'class': 'champ-texte'}),
         }
 
-class ProductFeedbackForm(forms.ModelForm):
+class EventForm(forms.ModelForm):
     class Meta:
-        model = ProductFeedback
-        fields = ['product', 'comment', 'rating']
+        model = Event
+        fields = ['event_name', 'description', 'start_date', 'end_date', 'location', 'event_type', 'max_participants', 'status', 'banner_image']
         widgets = {
-            'product': forms.Select(attrs={'class': 'champ-texte'}),
-            'comment': forms.Textarea(attrs={'rows': 4, 'cols': 15, 'placeholder': 'Your feedback'}),
-            'rating': forms.NumberInput(attrs={'min': 1, 'max': 5, 'placeholder': 'Rate 1-5'}),
+            'description': forms.Textarea(attrs={'rows': 4, 'cols': 10}),
+            'start_date': forms.DateTimeInput(attrs={'type': 'datetime-local'}),
+            'end_date': forms.DateTimeInput(attrs={'type': 'datetime-local'}),
+        }
+
+class SponsorForm(forms.ModelForm):
+    class Meta:
+        model = Sponsor
+        fields = ['name', 'event', 'sponsorship_type', 'description']
+        widgets = {
+            'description': forms.Textarea(attrs={'rows': 4, 'cols': 10}),
         }

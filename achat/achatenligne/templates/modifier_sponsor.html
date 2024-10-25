@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+
+{% block title %}Modifier un Sponsor{% endblock %}
+
+{% block header %}
+    <h1>Modifier un Sponsor</h1>
+{% endblock %}
+
+{% block content %}
+<!-- Styles intégrés -->
+<style>
+    .form-container {
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        padding: 20px;
+        background-color: #f9f9f9;
+        width: 85%;
+        margin: 20px auto;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+
+    .form-group {
+        margin-bottom: 15px;
+    }
+
+    .form-group label {
+        display: block;
+        margin-bottom: 5px;
+        font-weight: bold;
+        color: #333;
+    }
+
+    .form-group input[type="text"],
+    .form-group textarea,
+    .form-group select {
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        padding: 5px;
+        width: 100%;
+        box-sizing: border-box;
+        font-size: 16px;
+    }
+
+    .form-group input[type="text"]:focus,
+    .form-group textarea:focus,
+    .form-group select:focus {
+        border-color: #66afe9;
+        outline: none;
+        box-shadow: 0 0 5px rgba(102, 175, 233, 0.5);
+    }
+</style>
+
+<!-- Contenu principal -->
+<section class="content">
+    <div class="form-container">
+        <form method="POST">
+            {% csrf_token %}
+            
+            <div class="form-group">
+                <label for="{{ form.name.id_for_label }}">Nom du Sponsor :</label>
+                {{ form.name }}
+            </div>
+
+            <div class="form-group">
+                <label for="{{ form.sponsorship_type.id_for_label }}">Type de Sponsoring :</label>
+                {{ form.sponsorship_type }}
+            </div>
+
+            <div class="form-group">
+                <label for="{{ form.event.id_for_label }}">Événement Associé :</label>
+                {{ form.event }}
+            </div>
+
+            <div class="form-group">
+                <label for="{{ form.description.id_for_label }}">Description :</label>
+                {{ form.description }}
+            </div>
+
+            <button type="submit" class="btn btn-primary d-inline-block">Enregistrer</button>
+            <a href="{% url 'afficher_sponsors' %}" class="btn btn-primary d-inline-block" style="margin-left: 10px;">
+                Retour à la liste des sponsors
+            </a>
+        </form>
+    </div>
+</section>
+
+{% endblock %}
