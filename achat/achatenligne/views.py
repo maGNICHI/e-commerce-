@@ -3,11 +3,12 @@ from .models import Category
 from .forms import CategoryForm  
 from .models import Product  
 from .forms import ProductForm
-from .models import Fournisseur, Commande
+from .models import Fournisseur, Commande, ÉlémentCommande
 from .forms import FournisseurForm, CommandeForm
 
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
+from decimal import Decimal
 
 # Create your views here.
 def BASE(request):
@@ -163,3 +164,55 @@ def delete_commande(request, commande_id):
     commande = get_object_or_404(Commande, id=commande_id)
     commande.delete()
     return redirect('afficher_commandes')
+# Vue pour ajouter un produit à la commande de l'utilisateur dans le front-end
+
+from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib import messages
+from .models import Product, Commande, ÉlémentCommande
+from decimal import Decimal
+
+from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib import messages
+from .models import Product, Commande, ÉlémentCommande
+from decimal import Decimal
+
+def ajouter_produit_commande(request, produit_id):
+    produit = get_object_or_404(Product, id=produit_id)
+
+    # Créer ou récupérer une commande en cours pour l'utilisateur
+    commande, created = Commande.objects.get_or_create(
+        utilisateur=request.user,
+        statut='EN_COURS',
+        defaults={'prix_total': Decimal('0.00')}  # Initialisez prix_total à 0.00 comme Decimal
+    )
+
+    # Vérifiez si l'élément de commande existe déjà
+    element_commande, created = ÉlémentCommande.objects.get_or_create(
+        commande=commande,
+        produit=produit,
+        defaults={'quantité': 0, 'prix': produit.price}
+    )
+
+    # Mise à jour de la quantité et du prix
+    element_commande.quantité += 1
+    element_commande.prix = produit.price  # Assurez-vous que le prix est le prix actuel du produit
+    element_commande.save()
+
+    # Mise à jour du prix total de la commande
+    commande.prix_total += Decimal(produit.price)  # Convertir le prix du produit en Decimal
+    commande.save()  # Enregistrez la commande avec le prix mis à jour
+
+    # Affichez le message de succès uniquement si c'est un nouvel élément de commande
+    if created:
+        messages.success(request, f'{produit.title} a été ajouté à votre commande.')
+    else:
+        messages.info(request, f'La quantité de {produit.title} a été mise à jour dans votre commande.')
+
+    return redirect('afficher_produit')  # Redirige vers l'affichage des produits
+
+
+# Vue pour afficher la commande (ou panier) de l'utilisateur
+def afficher_commande(request):
+    commande = Commande.objects.filter(utilisateur=request.user, statut='EN_COURS').first()
+    elements_commande = ÉlémentCommande.objects.filter(commande=commande) if commande else None
+    return render(request, 'commande.html', {'commande': commande, 'elements_commande': elements_commande})

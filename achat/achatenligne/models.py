@@ -55,14 +55,13 @@ class Commande(models.Model):
     utilisateur = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     date_commande = models.DateTimeField(auto_now_add=True)
     statut = models.CharField(max_length=50, choices=STATUT_CHOIX, default='en_attente')
-    prix_total = models.DecimalField(max_digits=10, decimal_places=2)
+    prix_total = models.DecimalField(max_digits=10, decimal_places=2, default=0)  # Valeur par défaut ajoutée
 
     class Meta:
         ordering = ['-date_commande']
 
     def __str__(self):
         return f"Commande #{self.id} par {self.utilisateur.username}"
-
 
 # Entité ÉlémentCommande (Jointure entre Commande et Produit)
 class ÉlémentCommande(models.Model):

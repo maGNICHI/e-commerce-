@@ -42,6 +42,13 @@
     <!-- Contenu spécifique à la page produit -->
     <div class="container">
         <h1>Nos Produits</h1>
+        {% if messages %}
+        <ul class="messages">
+            {% for message in messages %}
+                <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
         <div class="products" style="display: flex; justify-content: flex-start; flex-wrap: wrap;">
             {% for produit in produits %}
                 <div class="card" style="margin: 5px; width: 305px;"> <!-- Ajustez la largeur ici -->
@@ -50,6 +57,12 @@
                     <p>Description : {{ produit.description }}</p>
                     <p class="price">{{ produit.price }} €</p>
                     <p>Catégorie : {{ produit.category.name }}</p>
+               <!-- Formulaire pour ajouter le produit à la commande -->
+<form action="{% url 'ajouter_produit_commande' produit.id %}" method="post">
+    {% csrf_token %}
+    <button type="submit" class="btn btn-primary">Ajouter à la commande</button>
+</form>
+
                 </div>
             {% empty %}
                 <p>Aucun produit disponible pour le moment.</p>

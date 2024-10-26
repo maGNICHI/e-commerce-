@@ -24,10 +24,15 @@ urlpatterns = [
     path('dashboard/fournisseurs/delete/<int:fournisseur_id>/', views.delete_fournisseur, name='delete_fournisseur'),
 
     # Routes pour Commande
-    path('commandes/', views.afficher_commandes, name='afficher_commandes'),
+    # path('commandes/', views.afficher_commandes, name='afficher_commandes'),
     path('dashboard/commandes/', views.afficher_commandes, name='afficher_commandes'),
     path('dashboard/commandes/ajouter/', views.ajouter_commande, name='ajouter_commande'),
     path('dashboard/commandes/edit/<int:commande_id>/', views.edit_commande, name='edit_commande'),
     path('dashboard/commandes/delete/<int:commande_id>/', views.delete_commande, name='delete_commande'),
+    # URLs pour le front (utilisateur)
+    # path('produits/', views.liste_produits, name='liste_produits'),
+# urls.py
+path('commande/ajouter/<int:produit_id>/', views.ajouter_produit_commande, name='ajouter_produit_commande'),
+    path('commande/', views.afficher_commande, name='afficher_commande'),
 ]
  

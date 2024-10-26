@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block title %}Ma Commande{% endblock %}
+
+{% block content %}
+<style>
+    .messages {
+        list-style-type: none;
+        padding: 0;
+        margin-bottom: 20px;
+    }
+    .success {
+        color: green;
+        font-weight: bold;
+    }
+    .error {
+        color: red;
+        font-weight: bold;
+    }
+</style>
+
+<div class="container">
+    <h1>Votre Commande</h1>
+
+
+
+    {% if commande and elements_commande %}
+        <ul>
+            {% for element in elements_commande %}
+                <li>{{ element.produit.title }} - {{ element.quantité }} × {{ element.produit.price }} €</li>
+            {% endfor %}
+        </ul>
+        <p>Total: {{ commande.prix_total }} €</p>
+    {% else %}
+        <p>Votre commande est vide.</p>
+    {% endif %}
+</div>
+{% endblock %}
