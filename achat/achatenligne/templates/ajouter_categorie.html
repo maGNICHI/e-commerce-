@@ -48,6 +48,12 @@
         outline: none;           /* Retirer le contour par défaut */
         box-shadow: 0 0 5px rgba(102, 175, 233, 0.5); /* Ombre lors du focus */
     }
+
+    .error-message {
+        color: red;
+        display: none; /* Masquer par défaut */
+        margin-top: 5px; /* Espacement au-dessus du message d'erreur */
+    }
 </style>
 
 <!-- Contenu principal -->
@@ -59,21 +65,41 @@
             <div class="form-group">
                 <label for="{{ form.name.id_for_label }}">Nom :</label>
                 {{ form.name }}  <!-- Champ de texte simple pour le nom -->
+                <div class="error-message" id="error-name">Champ requis</div> <!-- Message d'erreur -->
             </div>
             
             <div class="form-group">
                 <label for="{{ form.description.id_for_label }}">Description :</label>
                 {{ form.description.as_text }}  <!-- Changer textarea en champ texte pour description -->
+                <div class="error-message" id="error-description">Champ requis</div> <!-- Message d'erreur -->
             </div>
             
             <button type="submit" class="btn btn-primary d-inline-block">Ajouter</button>
             <a href="{% url 'afficher_categories' %}" class="btn btn-primary d-inline-block" style="margin-left: 10px;">
                Retour à la liste des catégories
             </a>
-
         </form>
-       
     </div>
 </section>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const inputs = document.querySelectorAll('.form-group input, .form-group textarea');
+
+        inputs.forEach(input => {
+            input.addEventListener('blur', function() {
+                if (!input.value) { // Vérifie si le champ est vide
+                    document.getElementById('error-' + input.name).style.display = 'block'; // Affiche le message d'erreur
+                } else {
+                    document.getElementById('error-' + input.name).style.display = 'none'; // Masque le message d'erreur
+                }
+            });
+
+            input.addEventListener('focus', function() {
+                document.getElementById('error-' + input.name).style.display = 'none'; // Masque le message d'erreur lors du focus
+            });
+        });
+    });
+</script>
 
 {% endblock %}
