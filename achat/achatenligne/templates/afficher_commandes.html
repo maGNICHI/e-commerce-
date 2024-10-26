@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+{% block title %}Liste des Commandes{% endblock %}
+
+{% block header %}
+    <h1>Liste des Commandes</h1>
+{% endblock %}
+
+{% block content %}
+<section class="content">
+    <a href="/dashboard/commandes/ajouter/" class="btn btn-primary" style="margin-bottom: 10px;">
+        Ajouter une Commande
+    </a>
+    <table style="width: 100%; border-collapse: collapse;">
+        <tr>
+            <th style="border: 1px solid #dddddd; padding: 8px;">Utilisateur</th>
+            <th style="border: 1px solid #dddddd; padding: 8px;">Date_Commande</th>
+            <th style="border: 1px solid #dddddd; padding: 8px;">Statut</th>
+            <th style="border: 1px solid #dddddd; padding: 8px;">Prix_total</th>
+            <th style="border: 1px solid #dddddd; padding: 8px;">Actions</th>
+        </tr>
+        {% for Commande in commandes %}
+        <tr>
+            <td style="border: 1px solid #dddddd; padding: 8px;">{{ Commande.utilisateur }}</td>
+            <td style="border: 1px solid #dddddd; padding: 8px;">{{ Commande.date_commande }} TND</td>
+            <td style="border: 1px solid #dddddd; padding: 8px;">{{ Commande.statut }}</td>
+            <td style="border: 1px solid #dddddd; padding: 8px;">{{ Commande.prix_total }}</td>
+            
+            <td style="border: 1px solid #dddddd; padding: 8px;">
+                <a href="/dashboard/commandes/edit/{{ Commande.id }}" class="btn btn-warning btn-sm">Modifier</a>
+                <form action="{% url 'delete_commande' Commande.id %}" method="post" style="display:inline;">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce fournisseur ?');">Supprimer</button>
+                </form>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+</section>
+{% endblock %}
+

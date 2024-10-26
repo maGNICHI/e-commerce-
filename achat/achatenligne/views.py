@@ -3,6 +3,11 @@ from .models import Category
 from .forms import CategoryForm  
 from .models import Product  
 from .forms import ProductForm
+from .models import Fournisseur, Commande
+from .forms import FournisseurForm, CommandeForm
+
+from django.contrib.auth.decorators import login_required
+from django.contrib import messages
 
 # Create your views here.
 def BASE(request):
@@ -84,3 +89,77 @@ def afficher_categorie(request):
     return render(request, 'categories.html', {'categories': categories})
 def index(request):
     return render(request, 'index.html')
+# Vues pour Fournisseur
+def afficher_fournisseurs(request):
+    fournisseurs = Fournisseur.objects.all()
+    return render(request, 'afficher_fournisseurs.html', {'fournisseurs': fournisseurs})
+
+def ajouter_fournisseur(request):
+    if request.method == 'POST':
+        form = FournisseurForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('afficher_fournisseurs')
+    else:
+        form = FournisseurForm()
+    return render(request, 'ajouter_fournisseur.html', {'form': form})
+
+def edit_fournisseur(request, fournisseur_id):
+    fournisseur = get_object_or_404(Fournisseur, id=fournisseur_id)
+    if request.method == 'POST':
+        form = FournisseurForm(request.POST, instance=fournisseur)
+        if form.is_valid():
+            form.save()
+            return redirect('afficher_fournisseurs')
+    else:
+        form = FournisseurForm(instance=fournisseur)
+    return render(request, 'modifier_fournisseur.html', {'form': form})
+
+def delete_fournisseur(request, fournisseur_id):
+    fournisseur = get_object_or_404(Fournisseur, id=fournisseur_id)
+    fournisseur.delete()
+    return redirect('afficher_fournisseurs')
+
+# Vues pour Commande
+def afficher_commandes(request):
+    commandes = Commande.objects.all()
+    return render(request, 'afficher_commandes.html', {'commandes': commandes})
+
+# def ajouter_commande(request):
+#     if request.method == 'POST':
+#         form = CommandeForm(request.POST)
+#         if form.is_valid():
+#             form.save()
+#             return redirect('afficher_commandes')
+#     else:
+#         form = CommandeForm()
+#     return render(request, 'ajouter_commande.html', {'form': form})
+@login_required
+def ajouter_commande(request):
+    if request.method == 'POST':
+        form = CommandeForm(request.POST)
+        if form.is_valid():
+            commande = form.save(commit=False)
+            commande.utilisateur = request.user  # Associe la commande à l'utilisateur connecté
+            commande.save()
+            messages.success(request, "Commande ajoutée avec succès !")
+            return redirect('afficher_commandes')
+    else:
+        form = CommandeForm()
+    return render(request, 'ajouter_commande.html', {'form': form})
+
+def edit_commande(request, commande_id):
+    commande = get_object_or_404(Commande, id=commande_id)
+    if request.method == 'POST':
+        form = CommandeForm(request.POST, instance=commande)
+        if form.is_valid():
+            form.save()
+            return redirect('afficher_commandes')
+    else:
+        form = CommandeForm(instance=commande)
+    return render(request, 'modifier_commande.html', {'form': form})
+
+def delete_commande(request, commande_id):
+    commande = get_object_or_404(Commande, id=commande_id)
+    commande.delete()
+    return redirect('afficher_commandes')

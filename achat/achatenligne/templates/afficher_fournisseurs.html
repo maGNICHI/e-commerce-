@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+{% block title %}Liste des Fournisseurs{% endblock %}
+
+{% block header %}
+    <h1>Liste des Fournisseurs</h1>
+{% endblock %}
+
+{% block content %}
+<section class="content">
+    <a href="/dashboard/fournisseurs/ajouter/" class="btn btn-primary" style="margin-bottom: 10px;">
+        Ajouter un Fournisseur
+    </a>
+    <table style="width: 100%; border-collapse: collapse;">
+        <tr>
+            <th style="border: 1px solid #dddddd; padding: 8px;">Nom</th>
+            <th style="border: 1px solid #dddddd; padding: 8px;">Email de contact</th>
+            <th style="border: 1px solid #dddddd; padding: 8px;">Téléphone de contact</th>
+            <th style="border: 1px solid #dddddd; padding: 8px;">Adresse</th>
+            <th style="border: 1px solid #dddddd; padding: 8px;">Actions</th>
+        </tr>
+        {% for fournisseur in fournisseurs %}
+        <tr>
+            <td style="border: 1px solid #dddddd; padding: 8px;">{{ fournisseur.nom }}</td>
+            <td style="border: 1px solid #dddddd; padding: 8px;">{{ fournisseur.email_contact }} TND</td>
+            <td style="border: 1px solid #dddddd; padding: 8px;">{{ fournisseur.telephone_contact }}</td>
+            <td style="border: 1px solid #dddddd; padding: 8px;">{{ fournisseur.adresse }}</td>
+            
+            <td style="border: 1px solid #dddddd; padding: 8px;">
+                <a href="/dashboard/fournisseurs/edit/{{ fournisseur.id }}" class="btn btn-warning btn-sm">Modifier</a>
+                <form action="{% url 'delete_fournisseur' fournisseur.id %}" method="post" style="display:inline;">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce fournisseur ?');">Supprimer</button>
+                </form>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+</section>
+{% endblock %}
+

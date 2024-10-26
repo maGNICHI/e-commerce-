@@ -1,0 +1,96 @@
+/* General page styling */
+body, html {
+    height: 100%;
+    margin: 0;
+    font-family: 'Arial', sans-serif;
+    background-color: #f0f2f5; /* Soft background color */
+}
+
+.auth-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+/* Form container styling */
+.auth-container {
+    width: 100%;
+    max-width: 400px;
+    padding: 20px;
+    border-radius: 10px;
+    background-color: white;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); /* Subtle shadow for a modern look */
+    margin: 20px;
+}
+
+/* Heading styling */
+.auth-container h2 {
+    text-align: center;
+    margin-bottom: 30px;
+    font-weight: bold;
+    color: #333;
+}
+
+/* Form fields styling */
+.auth-container form {
+    display: flex;
+    flex-direction: column;
+}
+
+.auth-container form input {
+    padding: 12px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+}
+
+.auth-container form input:focus {
+    outline: none;
+    border-color: #007bff;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5); /* Blue border on focus */
+}
+
+/* Button styling */
+.auth-container form button {
+    padding: 12px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.auth-container form button:hover {
+    background-color: #0056b3; /* Darker blue on hover */
+}
+
+/* Styling for the password validation list */
+.auth-container form ul {
+    list-style: disc;
+    padding-left: 20px;
+    color: #ff3333; /* Red color for emphasis */
+}
+
+/* Optional: Additional styling for form links */
+.auth-container a {
+    text-align: center;
+    color: #007bff;
+    text-decoration: none;
+    margin-top: 15px;
+}
+
+.auth-container a:hover {
+    text-decoration: underline;
+}
+
+/* Mobile responsive adjustments */
+@media (max-width: 600px) {
+    .auth-container {
+        max-width: 90%;
+        padding: 15px;
+    }
+}
