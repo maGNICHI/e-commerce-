@@ -8,6 +8,13 @@ from .forms import WebsiteFeedbackForm
 from .models import Event, Sponsor
 from .forms import EventForm, SponsorForm
 
+import json
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+from transformers import AutoModelForCausalLM, AutoTokenizer
+import torch
+
+
 
 
 # Create your views here.
@@ -229,3 +236,46 @@ def delete_sponsor(request, sponsor_id):
     sponsor = get_object_or_404(Sponsor, id=sponsor_id)
     sponsor.delete()
     return redirect('afficher_sponsors')
+
+
+import os
+import json
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+from transformers import AutoTokenizer, AutoModelForCausalLM
+
+model_name = "ibm-granite/granite-3.0-1b-a400m-instruct"
+
+try:
+    tokenizer = AutoTokenizer.from_pretrained(model_name)
+    model = AutoModelForCausalLM.from_pretrained(model_name)
+except Exception as e:
+    print(f"Error loading the model: {str(e)}")
+    raise
+
+@csrf_exempt
+def chatbot(request):
+    if request.method == "POST":
+        try:
+            data = json.loads(request.body)
+            user_message = data.get("message")
+
+            # Ensure the message is not empty
+            if not user_message:
+                return JsonResponse({"error": "Message cannot be empty"}, status=400)
+
+            # Encode input and generate response
+            inputs = tokenizer.encode(user_message + tokenizer.eos_token, return_tensors="pt")
+            outputs = model.generate(inputs, max_length=150, num_return_sequences=1, no_repeat_ngram_size=2)
+
+            # Decode the response
+            bot_response = tokenizer.decode(outputs[0], skip_special_tokens=True)
+
+            return JsonResponse({"response": bot_response})
+        except json.JSONDecodeError:
+            return JsonResponse({"error": "Invalid JSON"}, status=400)
+    
+    return JsonResponse({"error": "Invalid request method. Use POST."}, status=400)
+
+def chat_home(request):
+    return render(request, "chat.html")

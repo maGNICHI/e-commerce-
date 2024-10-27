@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chatbot</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #f8f9fa;
+            margin: 0;
+            padding: 20px;
+        }
+
+        #chatbox {
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 10px;
+            height: 300px;
+            overflow-y: scroll;
+            margin-bottom: 10px;
+        }
+
+        #user-input {
+            width: 80%;
+            padding: 10px;
+        }
+
+        #send-button {
+            padding: 10px;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: auto;
+        }
+
+        h1 {
+            text-align: center;
+            color: #343a40;
+        }
+
+        p {
+            margin: 5px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Chatbot</h1>
+        <div id="chatbox"></div>
+        <input type="text" id="user-input" placeholder="Tapez un message...">
+        <button id="send-button">Envoyer</button>
+    </div>
+
+    <script>
+        document.getElementById('send-button').addEventListener('click', function() {
+            const userInput = document.getElementById('user-input').value;
+
+            // Check if the input is not empty
+            if (userInput.trim() === "") {
+                return;  // Prevent sending an empty message
+            }
+
+            // Append user input to chatbox
+            const chatbox = document.getElementById('chatbox');
+            chatbox.innerHTML += `<p><strong>Vous :</strong> ${userInput}</p>`;
+
+            // Send a POST request to the chatbot endpoint
+            fetch('/chatbot/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': '{{ csrf_token }}'  // Include CSRF token for security
+                },
+                body: JSON.stringify({ message: userInput })
+            })
+            .then(response => response.json())
+            .then(data => {
+                // Append only the bot's response to chatbox
+                chatbox.innerHTML += `<p><strong>Bot :</strong> ${data.response}</p>`;
+                document.getElementById('user-input').value = '';  // Clear the input field
+                chatbox.scrollTop = chatbox.scrollHeight;  // Scroll to the bottom
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        });
+    </script>
+</body>
+</html>
