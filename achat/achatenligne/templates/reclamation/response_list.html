@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+
+{% block title %}Réponses pour {{ reclamation.sujet }}{% endblock %}
+
+{% block header %}
+    <h1 class="text-center my-4">Réponses pour {{ reclamation.sujet }}</h1>
+{% endblock %}
+
+{% block content %}
+<section class="content container">
+    <div class="mb-4">
+        <h3>Ajouter une réponse:</h3>
+        <form method="post" action="{% url 'response_create' reclamation.id %}" class="bg-light p-3 rounded shadow-sm">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit" class="btn btn-primary">Soumettre</button>
+        </form>
+
+        <!-- Inline suggestion display -->
+        <div id="suggestion" style="margin-top: 10px; color: #777;">
+            <strong>Suggestion:</strong> <span id="suggestion-text"></span>
+        </div>
+    </div>
+
+    <h2>Réponses:</h2>
+    <div class="list-group">
+        {% for response in reclamation.responses.all %}
+        <div class="list-group-item d-flex justify-content-between align-items-center">
+            <div>
+                <strong>{{ response.message }}</strong> 
+                <small class="text-muted">{{ response.date_response }}</small>
+            </div>
+            <div>
+                <form action="{% url 'response_delete' reclamation.id response.id %}" method="post" style="display:inline;">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette réponse ?');">Supprimer</button>
+                </form>
+                <a href="{% url 'response_edit' reclamation.id response.id %}" class="btn btn-warning btn-sm ms-2">Modifier</a>
+            </div>
+        </div>
+        {% empty %}
+        <div class="list-group-item">Aucune réponse disponible.</div>
+        {% endfor %}
+    </div>
+</section>
+
+<script>
+    // JavaScript for real-time suggestion fetching
+    document.addEventListener('DOMContentLoaded', function() {
+        const messageInput = document.querySelector('#id_message');  // Adjust based on form field id
+        const suggestionText = document.getElementById('suggestion-text');
+
+        messageInput.addEventListener('input', function() {
+            const text = messageInput.value;
+            
+            // Send AJAX request to fetch suggestion
+            fetch("{% url 'generate_suggestion' %}", {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                    'X-CSRFToken': '{{ csrf_token }}'
+                },
+                body: new URLSearchParams({
+                    'text': text
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                suggestionText.textContent = data.suggestion;
+            })
+            .catch(error => console.error('Error fetching suggestion:', error));
+        });
+    });
+</script>
+{% endblock %}

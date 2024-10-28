@@ -5,6 +5,9 @@ from .models import Product  # Assure-toi d'importer le modèle Product
 from .forms import ProductForm
 from .models import Reclamation, Response
 from .forms import ReclamationForm, ResponseForm
+from django.http import JsonResponse
+import replicate
+from django.http import JsonResponse
 
 # Create your views here.
 def BASE(request):
@@ -91,12 +94,72 @@ def index(request):
 
 # View for front-end
 def reclamation_list(request):
+    reclamations = Reclamation.objects.prefetch_related('responses').all()
     reclamations = Reclamation.objects.all()
     return render(request, 'reclamation/reclamation_list.html', {'reclamations': reclamations})
 
 
+def detect_sentiment_view(request):
+    if request.method == "POST":
+        description = request.POST.get("description", "")
+        # Detect sentiment based on the text and return an emoji
+        sentiment_emoji = detect_sentiment(description)  # Ensure `detect_sentiment` returns an emoji
+        return JsonResponse({'sentiment_emoji': sentiment_emoji})
+def detect_sentiment(text):
+    """Function to detect sentiment and return an emoji."""
+    input_data = {
+        "prompt": f"Determine the sentiment of the following text: {text}"
+    }
+    output = replicate.run("meta/meta-llama-3-8b-instruct", input=input_data)
+    sentiment_text = "".join(output).strip().lower()
+
+    # Determine the emoji based on the sentiment detected
+    if "positive" in sentiment_text:
+        return "😊"  # Smiling face for positive sentiment
+    elif "negative" in sentiment_text:
+        return "😞"  # Sad face for negative sentiment
+    elif "neutral" in sentiment_text:
+        return "😐"  # Neutral face for neutral sentiment
+    elif "angry" in sentiment_text or "frustrated" in sentiment_text:
+        return "😠"  # Angry face for anger
+    elif "surprised" in sentiment_text or "shocked" in sentiment_text:
+        return "😲"  # Surprised face for shock
+    elif "happy" in sentiment_text or "joyful" in sentiment_text:
+        return "😁"  # Beaming face for joy or happiness
+    elif "sad" in sentiment_text or "depressed" in sentiment_text:
+        return "😢"  # Crying face for sadness
+    elif "confused" in sentiment_text:
+        return "😕"  # Confused face for confusion
+    elif "excited" in sentiment_text:
+        return "🤩"  # Star-struck face for excitement
+    elif "fearful" in sentiment_text or "scared" in sentiment_text:
+        return "😨"  # Fearful face for fear
+    else:
+        return "😶"  # Face without mouth for unknown/undetectable sentiment
 
 
+def reclamation_create(request):
+    sentiment_message = None  # Initialize variable to hold sentiment message
+    if request.method == "POST":
+        form = ReclamationForm(request.POST)
+        if form.is_valid():
+            reclamation = form.save()  # Save the reclamation
+            # Detect sentiment for the description
+            sentiment = detect_sentiment(reclamation.description)
+            sentiment_message = sentiment  # Store the sentiment emoji
+            
+            # Redirect back to the form to display the sentiment emoji
+            return render(request, 'reclamation/reclamation_form.html', {
+                'form': ReclamationForm(),  # Clear the form after submission
+                'sentiment_message': sentiment_message  # Pass sentiment message to the template
+            })
+    else:
+        form = ReclamationForm()
+    
+    return render(request, 'reclamation/reclamation_form.html', {
+        'form': form,
+        'sentiment_message': sentiment_message  # Pass sentiment message to the template
+    })
 
 # Edit a Reclamation
 def reclamation_edit(request, pk):
@@ -119,14 +182,11 @@ def reclamation_delete(request, pk):
     return render(request, 'reclamation/delete.html', {'reclamation': reclamation})
 
 # List responses for a specific Reclamation
-def response_list(request, reclamation_id):
-    reclamation = get_object_or_404(Reclamation, id=reclamation_id)
-    responses = reclamation.responses.all()
-    return render(request, 'response_list.html', {'reclamation': reclamation, 'responses': responses})
 
-# Add a new Response
+# Create a new Response
 def response_create(request, reclamation_id):
     reclamation = get_object_or_404(Reclamation, id=reclamation_id)
+
     if request.method == "POST":
         form = ResponseForm(request.POST)
         if form.is_valid():
@@ -136,12 +196,29 @@ def response_create(request, reclamation_id):
             return redirect('response_list', reclamation_id=reclamation.id)
     else:
         form = ResponseForm()
-    return render(request, 'reclamation/response_create.html', {'form': form, 'reclamation': reclamation})
 
+    return render(request, 'reclamation/response_create.html', {
+        'form': form,
+        'reclamation': reclamation
+    })
+
+def generate_suggestion(request):
+    if request.method == 'POST':
+        text = request.POST.get('text', '')
+        suggestion = ""
+        if text:
+            input_data = {
+                "prompt": f"Complete the following sentence. Don't write more than 1 sentence.\n----\n{text}"
+            }
+            output = replicate.run("meta/meta-llama-3-8b-instruct", input=input_data)
+            suggestion = "".join(output).strip()
+        return JsonResponse({'suggestion': suggestion})
+    return JsonResponse({'suggestion': ''})
 # Edit a Response (optional)
 def response_edit(request, reclamation_id, response_id):
     reclamation = get_object_or_404(Reclamation, id=reclamation_id)
     response = get_object_or_404(Response, id=response_id)
+
     if request.method == "POST":
         form = ResponseForm(request.POST, instance=response)
         if form.is_valid():
@@ -149,7 +226,15 @@ def response_edit(request, reclamation_id, response_id):
             return redirect('response_list', reclamation_id=reclamation.id)
     else:
         form = ResponseForm(instance=response)
-    return render(request, 'response_form.html', {'form': form, 'reclamation': reclamation})
+
+    responses = Response.objects.filter(reclamation=reclamation)
+
+    return render(request, 'your_app/response_list.html', {
+        'form': form,
+        'reclamation': reclamation,
+        'responses': responses,
+        'editing_response': response,
+    })
 
 # Delete a Response (optional)
 def response_delete(request, reclamation_id, response_id):
@@ -158,13 +243,32 @@ def response_delete(request, reclamation_id, response_id):
         response.delete()
         return redirect('response_list', reclamation_id=reclamation_id)
     return render(request, 'response_confirm_delete.html', {'response': response})
+def response_list(request, reclamation_id):
+    reclamation = get_object_or_404(Reclamation, id=reclamation_id)
+    responses = reclamation.responses.all()
+    
+    if request.method == 'POST':
+        form = ResponseForm(request.POST)
+        if form.is_valid():
+            response = form.save(commit=False)
+            response.reclamation = reclamation
+            response.save()
+            return redirect('response_list', reclamation_id=reclamation.id)
+    else:
+        form = ResponseForm()
 
+    return render(request, 'reclamation/response_list.html', {
+        'reclamation': reclamation,
+        'responses': responses,
+        'form': form,
+    })
 
 #daaaachboard
 
 def reclamation_lists(request):
     reclamations = Reclamation.objects.all()
     return render(request, 'reclamation/listreclamation.html', {'reclamations': reclamations})
+
 
 def edit_reclamation(request, reclamation_id):
     reclamation = get_object_or_404(Reclamation, id=reclamation_id)
@@ -188,3 +292,4 @@ def delete_reclamation(request, reclamation_id):
         return redirect('reclamation_lists')  # Redirect to the list view after deletion
 
     return render(request, 'reclamation/confirm_delete.html', {'reclamation': reclamation})
+

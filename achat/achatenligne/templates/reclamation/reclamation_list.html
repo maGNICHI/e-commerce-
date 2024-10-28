@@ -4,78 +4,122 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Liste des Réclamations</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <style>
-        /* Styles for the reclamation list */
-        .card {
-            border: 1px solid #ccc;
-            border-radius: 10px;
-            padding: 16px;
-            margin: 10px;
-            width: 100%;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            background-color: #f9f9f9;
+        /* Custom styles for the reclamation list */
+        body {
+            background-color: #f4f7fa;
+            font-family: Arial, sans-serif;
         }
-
-        .card h2 {
-            font-size: 20px;
-            margin-bottom: 10px;
-            color: #333;
-        }
-
-        .card p {
-            color: #555;
-            margin-bottom: 8px;
-        }
-
-        .card .date, .card .priorite {
-            font-size: 14px;
-            font-style: italic;
-            margin-top: 5px;
-        }
-
-        /* Container styling */
         .container {
             max-width: 1200px;
-            margin: 0 auto;
+            margin: 20px auto;
             padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
         }
-
-        /* Title */
         h1 {
             text-align: center;
             margin-bottom: 20px;
             color: #333;
+            font-size: 2.5em;
+            font-weight: bold;
         }
-
+        .btn {
+            padding: 10px 20px;
+            text-decoration: none;
+            color: #fff;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+            margin-bottom: 15px;
+        }
+        .btn-primary {
+            background-color: #007bff;
+        }
+        .btn-danger {
+            background-color: #dc3545;
+        }
+        .btn:hover {
+            opacity: 0.8;
+        }
+        .card {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 16px;
+            margin: 10px 0;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s;
+        }
+        .card:hover {
+            transform: scale(1.02);
+        }
+        .card h2 {
+            font-size: 1.5em;
+            margin-bottom: 10px;
+            color: #333;
+        }
+        .card p {
+            color: #555;
+            margin-bottom: 8px;
+        }
+        .priorite {
+            font-size: 14px;
+            font-style: italic;
+            margin-top: 5px;
+        }
+        .date {
+            font-size: 14px;
+            font-style: italic;
+            color: #888;
+            margin-top: 5px;
+        }
     </style>
 </head>
 <body>
     <!-- Include header -->
     {% include 'partials/header.html' %}
 
-    <!-- Reclamation List -->
-    <div class="reclamations">
-        {% for reclamation in reclamations %}
-            <div class="card">
-                <h2>{{ reclamation.sujet }}</h2>
-                <p>{{ reclamation.description }}</p>
-                <p class="priorite">Priorité : {{ reclamation.priorite }}</p>
-                <p class="date">Date : {{ reclamation.date_created|date:"d/m/Y" }}</p>
-                
-                <!-- Edit and Delete buttons -->
-                <a href="{% url 'reclamation_edit' reclamation.pk %}" class="btn btn-primary">Edit</a>
-                <form action="{% url 'reclamation_delete' reclamation.pk %}" method="POST" style="display:inline;">
-                    {% csrf_token %}
-                    <button type="submit" class="btn btn-danger">Delete</button>
-                </form>
-            </div>
-        {% empty %}
-            <p>Aucune réclamation pour le moment.</p>
-        {% endfor %}
+    <!-- Main container -->
+    <div class="container">
+        <h1>Liste des Réclamations</h1>
+        <a href="{% url 'reclamation_create' %}" class="btn btn-primary">Ajouter une Réclamation</a>
+        
+        <!-- Reclamation List -->
+        <div class="reclamations">
+            {% for reclamation in reclamations %}
+                <div class="card">
+                    <h2>Sujet : {{ reclamation.sujet }}</h2>
+                    <p>Description : {{ reclamation.description }}</p>
+
+                    <!-- Display response if it exists -->
+                    {% if reclamation.reponse_set.exists %}
+                        <p>Réponse : {{ reclamation.reponse_set.first.description }}</p>
+                    {% else %}
+                        <p>Pas de réponse disponible.</p>
+                    {% endif %}
+                    
+                    <p class="priorite">Priorité : {{ reclamation.priorite }}</p>
+                    <p class="date">Date : {{ reclamation.date_created|date:"d/m/Y" }}</p>
+                    
+                    <!-- Edit and Delete buttons -->
+                    <a href="{% url 'reclamation_edit' reclamation.pk %}" class="btn btn-primary">Modifier</a>
+                    <form action="{% url 'reclamation_delete' reclamation.pk %}" method="POST" style="display:inline;">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-danger">Supprimer</button>
+                    </form>
+                </div>
+            {% empty %}
+                <p>Aucune réclamation pour le moment.</p>
+            {% endfor %}
+        </div>
     </div>
     
-
     <!-- Include footer -->
     {% include 'partials/footer.html' %}
+    
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>

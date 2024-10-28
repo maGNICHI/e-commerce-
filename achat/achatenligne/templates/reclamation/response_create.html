@@ -1,3 +1,4 @@
+<!-- response_create.html -->
 {% extends "base.html" %}
 
 {% block title %}Ajouter une Réponse{% endblock %}
@@ -10,9 +11,9 @@
 <section class="content">
     <form method="post">
         {% csrf_token %}
-        {{ form.as_p }}  <!-- This will include the message and the hidden reclamation field -->
-        <button type="submit" class="btn btn-primary">Enregistrer</button>
-        <a href="{% url 'reclamation_lists' %}" class="btn btn-secondary">Annuler</a>
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-primary">Ajouter une Réponse</button>
+        <a href="{% url 'response_list' reclamation.id %}" class="btn btn-secondary">Annuler</a>
     </form>
 </section>
 {% endblock %}

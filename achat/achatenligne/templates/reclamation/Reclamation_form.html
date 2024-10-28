@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ajouter une Réclamation</title>
-
     <style>
+        /* General Styles */
         body {
             font-family: Arial, sans-serif;
             margin: 0;
@@ -26,6 +26,7 @@
         }
         .form-group {
             margin-bottom: 15px;
+            position: relative;
         }
         label {
             display: block;
@@ -48,6 +49,7 @@
             cursor: pointer;
             font-size: 16px;
             width: 100%;
+            margin-top: 10px;
         }
         button:hover {
             background-color: #0056b3;
@@ -62,37 +64,58 @@
         a:hover {
             text-decoration: underline;
         }
+        .text-danger {
+            color: red; /* Error message color */
+            font-size: 0.9em; /* Smaller font size for error messages */
+            margin-top: 5px; /* Spacing above error messages */
+        }
+
+        /* Style for Sentiment Emoji */
+        #sentiment-emoji {
+            font-size: 3em;
+            position: absolute;
+            top: 32px; /* Adjust based on textarea padding and height */
+            right: 10px;
+            opacity: 0.8;
+        }
     </style>
 </head>
-{% include 'partials/header.html' %}
 <body>
 
-  
-    
+    <!-- Navigation -->
+    {% include 'partials/header.html' %}
+
     <div class="container">
         <h1>Ajouter une Réclamation</h1>
         <form method="post" action="{% url 'reclamation_create' %}">
             {% csrf_token %}
-            
+
             <!-- Sujet Field -->
             <div class="form-group">
                 {{ form.sujet.label_tag }}
                 {{ form.sujet }}
-                {{ form.sujet.errors }}
+                {% if form.sujet.errors %}
+                    <div class="text-danger">{{ form.sujet.errors }}</div>
+                {% endif %}
             </div>
 
-            <!-- Description Field -->
+            <!-- Description Field with Real-Time Sentiment Emoji -->
             <div class="form-group">
                 {{ form.description.label_tag }}
                 {{ form.description }}
-                {{ form.description.errors }}
+                <span id="sentiment-emoji">😐</span> <!-- Default neutral emoji -->
+                {% if form.description.errors %}
+                    <div class="text-danger">{{ form.description.errors }}</div>
+                {% endif %}
             </div>
 
             <!-- Priorité Field -->
             <div class="form-group">
                 {{ form.priorite.label_tag }}
                 {{ form.priorite }}
-                {{ form.priorite.errors }}
+                {% if form.priorite.errors %}
+                    <div class="text-danger">{{ form.priorite.errors }}</div>
+                {% endif %}
             </div>
 
             <!-- Submit Button -->
@@ -101,7 +124,33 @@
         <a href="{% url 'reclamation_list' %}">Retour à la liste des réclamations</a>
     </div>
 
+    <!-- Footer -->
     {% include 'partials/footer.html' %}
 
+    <!-- JavaScript for Real-Time Sentiment Detection -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const descriptionField = document.querySelector("textarea[name='description']");
+            const sentimentEmojiSpan = document.getElementById("sentiment-emoji");
+
+            descriptionField.addEventListener("input", function () {
+                const description = descriptionField.value;
+
+                fetch("{% url 'detect_sentiment' %}", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/x-www-form-urlencoded",
+                        "X-CSRFToken": "{{ csrf_token }}"
+                    },
+                    body: new URLSearchParams({ "description": description })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    sentimentEmojiSpan.textContent = data.sentiment_emoji;
+                })
+                .catch(error => console.error("Error detecting sentiment:", error));
+            });
+        });
+    </script>
 </body>
 </html>
