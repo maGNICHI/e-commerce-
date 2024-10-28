@@ -1,8 +1,5 @@
 from django import forms
-
 from .models import Category, Product, Reclamation, Response
-
-
 
 class CategoryForm(forms.ModelForm):
     class Meta:
@@ -13,8 +10,6 @@ class CategoryForm(forms.ModelForm):
         super(CategoryForm, self).__init__(*args, **kwargs)
         self.fields['name'].widget.attrs.update({'class': 'champ-texte'})
         self.fields['description'].widget.attrs.update({'class': 'champ-texte'})
-
-
 
 class ProductForm(forms.ModelForm):
     class Meta:
@@ -36,7 +31,7 @@ class ProductForm(forms.ModelForm):
         self.fields['category'] = forms.ModelChoiceField(
             queryset=Category.objects.all(),
             widget=forms.Select(attrs={'class': 'champ-texte'}),
-            empty_label="Sélectionnez une catégorie"  # Option par défaut
+            empty_label="Sélectionnez une catégorie"
         )
 
 class ReclamationForm(forms.ModelForm):
@@ -53,7 +48,6 @@ class ReclamationForm(forms.ModelForm):
         self.fields['sujet'].widget.attrs.update({'class': 'champ-texte'})
         self.fields['description'].widget.attrs.update({'class': 'champ-texte'})
         self.fields['priorite'].widget.attrs.update({'class': 'champ-texte'})
-
 
 class ResponseForm(forms.ModelForm):
     class Meta:

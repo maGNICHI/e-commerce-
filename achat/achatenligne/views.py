@@ -95,15 +95,7 @@ def reclamation_list(request):
     return render(request, 'reclamation/reclamation_list.html', {'reclamations': reclamations})
 
 
-def reclamation_create(request):
-    if request.method == "POST":
-        form = ReclamationForm(request.POST)
-        if form.is_valid():
-            form.save()
-            return redirect('reclamation_list')
-    else:
-        form = ReclamationForm()
-    return render(request, 'reclamation/reclamation_form.html', {'form': form})
+
 
 
 # Edit a Reclamation

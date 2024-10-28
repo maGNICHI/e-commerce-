@@ -94,7 +94,7 @@ WSGI_APPLICATION = 'achat.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'achat',         # Name of your database
+        'NAME': 'achat3',         # Name of your database
         'USER': 'root',          # MySQL username
         'PASSWORD': 'azerty2001',          # Leave this empty if there's no password
         'HOST': '127.0.0.1',     # MySQL server address
