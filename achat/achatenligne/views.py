@@ -3,7 +3,7 @@ from .models import Category
 from .forms import CategoryForm  # Importez le formulaire que vous avez créé
 from .models import Product  # Assure-toi d'importer le modèle Product
 from .forms import ProductForm
-from .models import Post, Comment
+from .models import Post, Comment, Like
 from .forms import PostForm, CommentForm
 
 
@@ -94,7 +94,11 @@ def index(request):
 # Afficher la liste des articles (Posts)
 def affiche_posts(request):
     posts = Post.objects.all().order_by('-created_at')  # Trier par date
+     # Generate summaries for each post
+    for post in posts:
+        post.summary = abstractive_summarizer(post.content)  # Add a summary field
     return render(request, 'gestionpost/affiche_posts.html', {'posts': posts})
+
 #Afficher la liste des articles (Posts) patrie dashboard
 def affiche_postsdash(request):
     posts = Post.objects.all()
@@ -221,3 +225,17 @@ def delete_comment(request, comment_id):
         comment.delete()
         return redirect('post_detail', post_id=post_id)
     return render(request, 'gestionpost/supprimer_comment.html', {'comment': comment})
+def like_post(request, post_id):
+    post = get_object_or_404(Post, id=post_id)
+    # Ajouter un like au post
+    Like.objects.create(post=post)
+    return redirect('post_detail', post_id=post.id)  # Redirige vers la page des détails du post
+# Vue pour retirer un like d'un post
+def unlike_post(request, post_id):
+    post = get_object_or_404(Post, id=post_id)
+    # Supprimer un like si celui-ci existe pour ce post
+    like = Like.objects.filter(post=post).first()
+    if like:
+        like.delete()
+    return redirect('post_detail', post_id=post.id)  # Redirige vers la page des détails du post
+

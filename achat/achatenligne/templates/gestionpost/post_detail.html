@@ -143,11 +143,15 @@
                 <img src="{{ post.image.url }}" alt="{{ post.title }}">
             </p>
             {% endif %}
+            {% if post.pdf_version %}
+    <a href="{{ post.pdf_version.url }}" download>Télécharger en PDF</a>
+{% endif %}
+
         </div>
 
         <div class="timeline-likes">
             <div class="stats-right">
-                
+                <span>{{ post.total_likes }} Likes</span>
                 <span class="stats-text">{{ post.comments.count }} Comments</span>
             </div>
             
@@ -155,7 +159,10 @@
 
         <div class="timeline-footer">
           
-            <a href="javascript:;" class="text-inverse-lighter"><i class="fa fa-thumbs-up fa-fw fa-lg m-r-3"></i> Like</a>
+            <a href="{% url 'like_post' post.id %}" class="text-inverse-lighter"><i class="fa fa-thumbs-up fa-fw fa-lg m-r-3"></i> Like</a>
+            <a href="{% url 'unlike_post' post.id %}" class="text-inverse-lighter">
+                <i class="fa fa-thumbs-down fa-fw fa-lg m-r-3"></i> Unlike
+            </a>
             <a href="javascript:;" class="text-inverse-lighter"><i class="fa fa-comments fa-fw fa-lg m-r-3"></i> Comment</a>
             <a href="{% url 'affiche_posts' %}" class="text-inverse-lighter"><i class="fa fa-share fa-fw fa-lg m-r-3"></i> Retour</a>
   

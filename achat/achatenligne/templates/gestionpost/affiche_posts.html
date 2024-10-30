@@ -119,7 +119,13 @@
                                 </p>
                                 {% endif %}
                             </div>
-
+                            <div class="timeline-likes">
+                                <div class="stats-right">
+                                    <span>{{ post.total_likes }} Likes</span>
+                                    <span class="stats-text">{{ post.comments.count }} Comments</span>
+                                </div>
+                                
+                            </div>
                             <div class="timeline-footer">
                                 <a href="{% url 'edit_post' post.id %}" title="Modifier">
                                     <i class="fas fa-pencil-alt fa-fw"></i>
