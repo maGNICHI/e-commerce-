@@ -1,0 +1,93 @@
+{% extends "base.html" %}
+
+{% block title %}Ajouter un Produit{% endblock %}
+
+{% block header %}
+    <h1>Ajouter un Produit</h1>
+{% endblock %}
+
+{% block content %}
+<!-- Styles intégrés -->
+<style>
+    .form-container {
+        border: 1px solid #ccc; /* Bordure gris clair */
+        border-radius: 8px;     /* Coins arrondis */
+        padding: 20px;          /* Espacement intérieur */
+        background-color: #f9f9f9; /* Couleur de fond légère */
+        width: 85%;             /* Largeur du formulaire */
+        margin: 20px auto;      /* Centrer le formulaire */
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Légère ombre pour le relief */
+    }
+
+    .form-group {
+        margin-bottom: 15px; /* Espacement entre les groupes de champs */
+    }
+
+    .form-group label {
+        display: block;       /* Afficher l'étiquette comme un bloc */
+        margin-bottom: 5px;   /* Espacement en dessous de l'étiquette */
+        font-weight: bold;    /* Mettre l'étiquette en gras */
+        color: #333;          /* Couleur du texte de l'étiquette */
+    }
+
+    .form-group input[type="text"],
+    .form-group input[type="email"],
+    .form-group textarea,
+    .form-group select {
+        border: 1px solid #ccc; /* Bordure gris clair */
+        border-radius: 4px;     /* Coins arrondis */
+        padding: 5px;           /* Espacement intérieur */
+        width: 100%;            /* Largeur pleine */
+        box-sizing: border-box;  /* Inclure la bordure et le padding dans la largeur totale */
+        font-size: 16px;         /* Taille de la police */
+    }
+
+    .form-group input[type="text"]:focus,
+    .form-group input[type="email"]:focus,
+    .form-group textarea:focus,
+    .form-group select:focus {
+        border-color: #66afe9;   /* Couleur de bordure lors du focus */
+        outline: none;           /* Retirer le contour par défaut */
+        box-shadow: 0 0 5px rgba(102, 175, 233, 0.5); /* Ombre lors du focus */
+    }
+</style>
+
+<section class="content">
+    <div class="form-container">
+        <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="form-group" >
+                <label for="{{ form.title.id_for_label }}">Nom :</label>
+                {{ form.title }}  <!-- Champ de texte pour le titre -->
+            </div>
+            
+            <div class="form-group">
+                <label for="{{ form.price.id_for_label }}">Prix :</label>
+                {{ form.price }}  <!-- Champ de texte pour le prix -->
+            </div>
+            
+            <div class="form-group">
+                <label for="{{ form.description.id_for_label }}">Description :</label>
+                {{ form.description }}  <!-- Champ de texte pour la description -->
+            </div>
+            
+            <div class="form-group">
+                <label for="{{ form.category.id_for_label }}">Catégorie :</label>
+                {{ form.category }}  <!-- Champ de sélection pour la catégorie -->
+            </div>
+
+            <div class="form-group">
+                <label for="{{ form.image.id_for_label }}">Image :</label>
+                {{ form.image }}  <!-- Champ pour télécharger l'image -->
+            </div>
+
+            <button type="submit" class="btn btn-primary">Ajouter</button>
+
+    <a href="/dashboard/produits/" class="btn btn-secondary" style="margin-top: 10px;">
+        Retour à la liste des produits
+    </a>
+    </form>
+
+    </div>
+</section>
+{% endblock %}
